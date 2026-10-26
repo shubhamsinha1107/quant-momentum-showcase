@@ -344,7 +344,7 @@
   <div class="executive-callout">
     <div class="callout-title">The Strategy in 60 Seconds</div>
     <div class="callout-text">
-      This strategy is an <strong>institutional-grade, multi-asset quantitative framework</strong> spanning Indian equities, sectoral indices, and precious metals. Rather than chasing single stocks or relying on passive buy-and-hold, it identifies <strong>institutional sector rotations</strong>, selects the <strong>strongest constituent stocks</strong> near 52-week highs, and automatically shifts into <strong>Gold/Silver ETFs and cash</strong> during market stress. Over a 6.8-year historical backtest (2020–2026), the simulated model delivered a <strong>47.2% (Direct Index Baseline) to 73.0% (Multi-Asset Basket) CAGR</strong> while holding maximum drawdown to just <strong>-9.2% to -10.2%</strong> (2.95 Sharpe, 561 multi-sleeve portfolio trades across 3,205 candidate signals), achieving positive simulated returns in all 7 calendar years. Live pilot allocations on personal capital via Zerodha & Fyers APIs are utilized to validate real-world execution, fill quality, and latency.
+      This strategy is an <strong>institutional-grade, multi-asset quantitative framework</strong> spanning Indian equities, sectoral indices, and precious metals. Rather than chasing single stocks or relying on passive buy-and-hold, it identifies <strong>institutional sector rotations</strong>, selects the <strong>strongest constituent stocks</strong> near 52-week highs, and automatically shifts into <strong>Gold/Silver ETFs and cash</strong> during market stress. Over a 6.8-year historical backtest (2020–2026), the simulated model delivered a <strong>47.2% (Direct Index Baseline) to 73.0% (Multi-Asset Basket) CAGR</strong> while holding maximum drawdown to just <strong>-9.2% to -10.2%</strong> (2.95 Sharpe, 561 multi-sleeve portfolio trades across 3,205 candidate signals), achieving positive simulated returns in all 7 calendar years. Validated across an out-of-sample backtest (Jan 2023 – Jul 2025) and paper-traded forward since Aug 2025 (~14 months forward track record) with pilot allocations on personal capital via Zerodha &amp; Fyers APIs to validate real-world execution.
     </div>
   </div>
 
@@ -530,8 +530,8 @@
         <span class="section-num">Implementation</span>
       </h2>
       <div class="point-item">
-        <div class="point-title">Live Deployment on Personal & Firm-Allocated Capital</div>
-        <div class="point-desc">Live broker integration using Fyers REST API and Zerodha Kite Connect for real-time execution on personal capital, alongside monitoring across firm-allocated portfolios to verify fill quality, latency, and slippage against model prices.</div>
+        <div class="point-title">Walk-Forward OOS &amp; Paper-Trading Forward (Since Aug 2025)</div>
+        <div class="point-desc">Out-of-sample backtest across 2023–Jul 2025 on held-out historical data; live paper-traded forward since Aug 2025 (~14 months forward track record) via Fyers and Zerodha WebSocket feeds with pilot executions on personal capital to verify fill quality and queue priority against theoretical prices.</div>
       </div>
       <div class="point-item">
         <div class="point-title">Automated 15-Minute Pipeline</div>
