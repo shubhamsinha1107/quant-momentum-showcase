@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Index Trade Log Explorer | Quantitative Sector Momentum Strategy</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; }
+    .mono { font-family: 'JetBrains Mono', monospace; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- Header -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <a href="/" class="w-9 h-9 rounded-lg bg-slate-900 flex items-center justify-center text-white font-bold text-sm tracking-wider hover:bg-slate-800 transition">
+          QS
+        </a>
+        <div>
+          <h1 class="text-sm font-bold text-slate-900">Sector Index Buy & Sell Ledger</h1>
+          <p class="text-xs text-slate-500">Discrete time-based trade cycles for major NSE indices & precious metals ETFs (2020–2026)</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-3 text-xs">
+        <a href="/" class="px-3 py-1.5 rounded-md bg-slate-100 hover:bg-slate-200 text-slate-800 font-medium transition border border-slate-300">
+          &larr; Back to Dashboard
+        </a>
+        <a href="/explainer" target="_blank" class="px-3 py-1.5 rounded-md bg-slate-100 hover:bg-slate-200 text-slate-800 font-medium transition border border-slate-300">
+          Strategy Explainer (PDF)
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+
+    <!-- Filter Card -->
+    <div class="bg-white rounded-xl p-5 border border-slate-200 shadow-sm">
+      <form method="get" action="/trades" class="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 gap-4 items-end">
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1.5">Filter by Sector Index / ETF</label>
+          <select name="index" class="w-full text-xs rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <option value="" {% if not selected_index %}selected{% endif %}>All Indices & ETFs ({{ total }})</option>
+            {% for idx in indices %}
+            <option value="{{ idx }}" {% if selected_index == idx %}selected{% endif %}>{{ idx }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1.5">Strategy Sleeve</label>
+          <select name="sleeve" class="w-full text-xs rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <option value="" {% if not selected_sleeve %}selected{% endif %}>All Sleeves</option>
+            <option value="Rapid" {% if selected_sleeve == 'Rapid' %}selected{% endif %}>Rapid Momentum</option>
+            <option value="Core" {% if selected_sleeve == 'Core' %}selected{% endif %}>Core Trend</option>
+            <option value="Hedge" {% if selected_sleeve == 'Hedge' %}selected{% endif %}>Crisis Hedge</option>
+          </select>
+        </div>
+        <div class="flex items-center gap-2">
+          <button type="submit" class="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-lg transition shadow-sm">
+            Apply Filter
+          </button>
+          <a href="/trades" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-medium rounded-lg transition border border-slate-200">
+            Reset
+          </a>
+        </div>
+        <div class="text-right text-xs text-slate-500 sm:col-span-3 md:col-span-1">
+          Showing <span class="font-bold text-slate-800">{{ trades|length }}</span> of <span class="font-bold text-slate-800">{{ total }}</span> trades
+        </div>
+      </form>
+    </div>
+
+    <!-- Trades Table -->
+    <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="w-full text-xs text-left border-collapse">
+          <thead>
+            <tr class="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200">
+              <th class="py-3 px-3">Trade #</th>
+              <th class="py-3 px-3">Sector Index / ETF</th>
+              <th class="py-3 px-3">Strategy Sleeve</th>
+              <th class="py-3 px-3">Buy Signal (Entry)</th>
+              <th class="py-3 px-3">Sell Signal (Exit)</th>
+              <th class="py-3 px-3">Entry Price</th>
+              <th class="py-3 px-3">Exit Price</th>
+              <th class="py-3 px-3">Holding (Days)</th>
+              <th class="py-3 px-3 text-right">Net Return</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100 mono">
+            {% for t in trades %}
+            <tr class="hover:bg-slate-50/60 transition">
+              <td class="py-2.5 px-3 text-slate-400">#{{ t.trade_no or t.get('Trade No') }}</td>
+              <td class="py-2.5 px-3 font-bold text-slate-900 sans">
+                <span class="inline-block px-1.5 py-0.5 rounded bg-slate-100 text-slate-800 border border-slate-200 text-[11px]">
+                  {{ t.stock or t.get('Stock') }}
+                </span>
+              </td>
+              <td class="py-2.5 px-3 text-slate-600 sans">{{ t.sleeve or t.get('Sleeve') }}</td>
+              <td class="py-2.5 px-3 text-slate-600">{{ t.entry_time or t.get('Entry Time') }}</td>
+              <td class="py-2.5 px-3 text-slate-600">{{ t.exit_time or t.get('Exit Time') }}</td>
+              <td class="py-2.5 px-3 text-slate-700">&#8377;{{ "%.2f"|format(t.entry_price or t.get('Entry Price', 0)) }}</td>
+              <td class="py-2.5 px-3 text-slate-700">&#8377;{{ "%.2f"|format(t.exit_price or t.get('Exit Price', 0)) }}</td>
+              <td class="py-2.5 px-3 text-slate-600">{{ "%.2f"|format(t.holding_days or t.get('Holding Period (days)', 0)) }}d</td>
+              {% set ret = t.return_pct or t.get('Return_Pct', 0) %}
+              <td class="py-2.5 px-3 text-right font-bold {% if ret > 0 %}text-emerald-600{% elif ret < 0 %}text-rose-600{% else %}text-slate-400{% endif %}">
+                {{ "%+.2f"|format(ret) }}%
+              </td>
+            </tr>
+            {% else %}
+            <tr>
+              <td colspan="9" class="py-8 text-center text-slate-400 sans">
+                No index trades match the specified filter criteria.
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      {% if total_pages > 1 %}
+      <div class="px-5 py-3.5 bg-slate-50 border-t border-slate-200 flex items-center justify-between text-xs">
+        <div>
+          Page <span class="font-bold text-slate-800">{{ page }}</span> of <span class="font-bold text-slate-800">{{ total_pages }}</span>
+        </div>
+        <div class="flex items-center space-x-2">
+          {% if page > 1 %}
+          <a href="/trades?page={{ page - 1 }}&index={{ selected_index }}&sleeve={{ selected_sleeve }}" class="px-3 py-1.5 rounded bg-white border border-slate-300 text-slate-700 font-medium hover:bg-slate-100 transition">
+            &larr; Previous
+          </a>
+          {% endif %}
+          {% if page < total_pages %}
+          <a href="/trades?page={{ page + 1 }}&index={{ selected_index }}&sleeve={{ selected_sleeve }}" class="px-3 py-1.5 rounded bg-white border border-slate-300 text-slate-700 font-medium hover:bg-slate-100 transition">
+            Next &rarr;
+          </a>
+          {% endif %}
+        </div>
+      </div>
+      {% endif %}
+
+    </div>
+
+  </main>
+
+  <footer class="bg-white border-t border-slate-200 py-4 text-xs text-slate-500 text-center">
+    Quantitative Sector Momentum Strategy &bull; <a href="/" class="text-blue-600 hover:underline">Return to Main Dashboard</a>
+  </footer>
+
+</body>
+</html>

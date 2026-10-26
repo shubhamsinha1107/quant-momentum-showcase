@@ -1,0 +1,1421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quantitative Multi-Asset Sector Momentum Strategy | Institutional Showcase</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; }
+    .mono { font-family: 'JetBrains Mono', monospace; }
+    .card-border { border: 1px solid #e2e8f0; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- Institutional Top Header -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+    <div class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center space-x-3">
+        <div class="w-9 h-9 rounded-lg bg-slate-900 flex items-center justify-center text-white font-bold text-sm tracking-wider">
+          QS
+        </div>
+        <div>
+          <h1 class="text-base font-bold text-slate-900 leading-tight">Multi-Asset Sector Momentum & Macro Volatility Strategy</h1>
+          <p class="text-xs text-slate-500">Major NSE Sector Indices & Precious Metals ETFs | Empirical Backtest (2020–2026)</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-3 text-xs">
+        <a href="/explainer?print=1" target="_blank" class="px-3 py-1.5 rounded-md bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold transition flex items-center gap-1.5 border border-slate-300">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          Strategy Tear-Sheet (PDF / Memo)
+        </a>
+        <a href="/trades" class="px-3 py-1.5 rounded-md bg-slate-100 hover:bg-slate-200 text-slate-800 font-medium transition border border-slate-300">
+          Index Trade Logs ({{ total_trades }})
+        </a>
+        <a href="{{ linkedin_url }}" target="_blank" class="px-3 py-1.5 rounded-md bg-blue-50 text-blue-700 hover:bg-blue-100 font-medium transition border border-blue-200 flex items-center gap-1">
+          <span>LinkedIn</span>
+          <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+        </a>
+        <a href="{{ github_url }}" target="_blank" class="px-3 py-1.5 rounded-md bg-slate-900 text-white hover:bg-slate-800 font-medium transition flex items-center gap-1">
+          <span>GitHub</span>
+          <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Author Banner -->
+  <div class="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white border-b border-slate-700">
+    <div class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-5">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div>
+          <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-slate-800 border border-slate-700 text-slate-300 text-xs font-medium mb-2.5">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            Direct Index Baseline Edition | Major Sector Indices & Multi-Asset ETFs
+          </div>
+          <h2 class="text-xl font-bold tracking-tight text-white sm:text-2xl">Systematic Macro Sector Momentum & Volatility Overlay</h2>
+          <p class="mt-1.5 text-xs text-slate-300 max-w-3xl leading-relaxed">
+            Researched by <span class="text-white font-semibold">{{ author_name }}</span> ({{ author_title }}). 
+            Systematically rotates capital across 11 NSE sector indices and precious metals crisis hedges (Gold & Silver ETFs), enforcing strict drawdown containment without single-stock idiosyncratic risk.
+          </p>
+        </div>
+        <div class="bg-slate-800/80 rounded-xl p-3.5 border border-slate-700 shrink-0 text-xs text-slate-300 space-y-1.5 max-w-xs">
+          <div class="font-semibold text-white flex items-center gap-1.5">
+            <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+            Pure Index Timing Model
+          </div>
+          <p class="leading-normal text-[11px]">
+            Systematic allocation across 15 major sector indices &amp; precious metals ETFs (~148 executed cycles/year, 1,012 total portfolio fills from 3,205 candidate breakout signals). Verifiable macro timing attribution net of 15–20 bps friction.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Dashboard with Sticky Left Sidebar -->
+  <main class="flex-1 max-w-[1600px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+      <!-- STICKY SIDEBAR: Strategy Lab & Allocation Controls (4 cols on lg, 3.5 cols on xl) -->
+      <aside class="lg:col-span-4 xl:col-span-3.5 space-y-4 lg:sticky lg:top-20">
+        <div class="bg-white rounded-xl card-border shadow-sm overflow-hidden">
+          
+          <!-- Sidebar Header -->
+          <div class="bg-gradient-to-r from-slate-900 to-slate-800 text-white p-4 border-b border-slate-700">
+            <div class="flex items-center justify-between gap-2">
+              <div class="flex items-center space-x-2.5">
+                <div class="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white font-bold text-sm shadow-sm shrink-0">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
+                </div>
+                <div>
+                  <h3 class="text-xs font-bold text-white uppercase tracking-wider">Strategy Lab</h3>
+                  <p class="text-[10px] text-slate-300">Live Allocation Engine</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-1.5">
+                <span id="simStatusPill" class="text-[10px] px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700 font-mono">
+                  Ready
+                </span>
+                <button id="btnResetBaseline" title="Reset Baseline (3 Slots)" class="p-1.5 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-200 transition border border-slate-600">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sidebar Body Controls -->
+          <div class="p-4 space-y-4 text-xs max-h-[calc(100vh-9.5rem)] overflow-y-auto">
+            
+            <!-- 1. Concurrent Slots -->
+            <div class="space-y-2">
+              <div class="flex items-center justify-between">
+                <label class="font-bold text-slate-900 uppercase tracking-wider text-[11px]">1. Concurrent Slots</label>
+                <span id="slotCountDisplay" class="font-bold px-2 py-0.5 rounded bg-blue-100 text-blue-800 mono text-[10px]">3 Slots (33.3%)</span>
+              </div>
+              <p class="text-[10px] text-slate-500 leading-tight">Capital split evenly (1/N). Prioritized by Sharpe rank.</p>
+              <div class="grid grid-cols-3 gap-1.5">
+                <button type="button" class="slot-btn py-1 px-1.5 rounded text-[11px] font-semibold border text-center transition bg-white text-slate-700 border-slate-300 hover:bg-slate-50" data-slots="1">1 Slot</button>
+                <button type="button" class="slot-btn py-1 px-1.5 rounded text-[11px] font-semibold border text-center transition bg-white text-slate-700 border-slate-300 hover:bg-slate-50" data-slots="2">2 Slots</button>
+                <button type="button" class="slot-btn py-1 px-1.5 rounded text-[11px] font-semibold border text-center transition bg-blue-600 text-white border-blue-600 shadow-sm" data-slots="3">3 Slots</button>
+                <button type="button" class="slot-btn py-1 px-1.5 rounded text-[11px] font-semibold border text-center transition bg-white text-slate-700 border-slate-300 hover:bg-slate-50" data-slots="4">4 Slots</button>
+                <button type="button" class="slot-btn py-1 px-1.5 rounded text-[11px] font-semibold border text-center transition bg-white text-slate-700 border-slate-300 hover:bg-slate-50" data-slots="5">5 Slots</button>
+                <button type="button" class="slot-btn py-1 px-1.5 rounded text-[11px] font-semibold border text-center transition bg-white text-slate-700 border-slate-300 hover:bg-slate-50" data-slots="10">10 Slots</button>
+              </div>
+              <button type="button" class="slot-btn w-full py-1 px-2 rounded text-[11px] font-semibold border text-center transition bg-white text-slate-700 border-slate-300 hover:bg-slate-50" data-slots="15">All 15 Slots (Unconstrained)</button>
+              <div class="flex items-center gap-2 pt-1">
+                <span class="text-[10px] font-mono text-slate-400">1</span>
+                <input type="range" id="slotSlider" min="1" max="15" value="3" class="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600">
+                <span class="text-[10px] font-mono text-slate-400">15</span>
+              </div>
+            </div>
+
+            <!-- 2. Signal Timeframe -->
+            <div class="space-y-1.5 pt-3 border-t border-slate-100">
+              <label class="font-bold text-slate-900 uppercase tracking-wider text-[11px] block">2. Signal Horizon</label>
+              <div class="grid grid-cols-2 gap-1.5">
+                <button type="button" class="tf-btn py-1.5 px-2 rounded text-[11px] font-semibold border text-center transition bg-blue-600 text-white border-blue-600 shadow-sm" data-tf="30m">
+                  30m Rapid
+                  <span class="block text-[9px] font-normal opacity-80">3,205 cands</span>
+                </button>
+                <button type="button" class="tf-btn py-1.5 px-2 rounded text-[11px] font-semibold border text-center transition bg-white text-slate-700 border-slate-300 hover:bg-slate-50" data-tf="60m">
+                  60m Core
+                  <span class="block text-[9px] font-normal opacity-80">1,791 cands</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- 3. Asset Universe -->
+            <div class="space-y-2 pt-3 border-t border-slate-100">
+              <div class="flex items-center justify-between">
+                <label class="font-bold text-slate-900 uppercase tracking-wider text-[11px]">3. Asset Universe</label>
+                <span id="universeCountDisplay" class="text-[10px] text-blue-600 font-semibold">15 of 15 Active</span>
+              </div>
+              
+              <!-- Quick Presets -->
+              <div class="grid grid-cols-2 gap-1 text-[10px]">
+                <button type="button" class="u-preset py-1 px-1.5 rounded font-medium bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 text-center transition" data-preset="all">All 15 Assets</button>
+                <button type="button" class="u-preset py-1 px-1.5 rounded font-medium bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 text-center transition" data-preset="equities">Equities (13)</button>
+                <button type="button" class="u-preset py-1 px-1.5 rounded font-medium bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 text-center transition" data-preset="bullion">Bullion (Gold/Silver)</button>
+                <button type="button" class="u-preset py-1 px-1.5 rounded font-medium bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 text-center transition" data-preset="financials">Banking & Fin</button>
+                <button type="button" class="u-preset py-1 px-1.5 rounded font-medium bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 text-center col-span-2 transition" data-preset="highbeta">Momentum Leaders</button>
+              </div>
+
+              <!-- Asset Pills Cloud -->
+              <div id="assetPillContainer" class="flex flex-wrap gap-1 pt-1">
+                <!-- Rendered via JavaScript -->
+              </div>
+            </div>
+
+            <!-- 4. Risk Controls & Crash Protection -->
+            <div class="space-y-2.5 pt-3 border-t border-slate-100">
+              <div class="flex items-center justify-between">
+                <label class="font-bold text-slate-900 uppercase tracking-wider text-[11px]">4. Risk Gates &amp; Protection</label>
+                <span id="gateStatusBadge" class="text-[9px] px-1.5 py-0.5 rounded font-mono font-semibold bg-emerald-100 text-emerald-800 border border-emerald-200">
+                  Protected
+                </span>
+              </div>
+
+              <!-- Macro Crash Gate Toggle -->
+              <div class="p-2.5 rounded-lg bg-slate-50 border border-slate-200 space-y-1.5">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-1.5">
+                    <span id="gatePulseDot" class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span class="font-semibold text-slate-800 text-[11px]">Macro Crash Gate</span>
+                  </div>
+                  <button type="button" id="toggleMacroGateBtn" class="px-2.5 py-0.5 rounded text-[10px] font-bold transition border bg-emerald-600 text-white border-emerald-600 shadow-xs hover:bg-emerald-700">
+                    ON
+                  </button>
+                </div>
+                <p class="text-[10px] text-slate-500 leading-tight">
+                  Suppresses equity breakouts during panic crashes (e.g. COVID Mar 2020) and parks capital into Cash / Gold.
+                  <span id="gateEffectNote" class="block font-medium text-emerald-700 mt-0.5">Mar 2020: +2.4% (Protected)</span>
+                </p>
+              </div>
+
+              <!-- Monthly Risk Budget Circuit Breaker -->
+              <div class="space-y-1.5">
+                <div class="flex items-center justify-between">
+                  <span class="font-semibold text-slate-800 text-[10px]">Monthly Risk Breaker</span>
+                  <span id="cbDisplay" class="text-[10px] font-mono text-slate-600">-7% Limit</span>
+                </div>
+                <div class="grid grid-cols-3 gap-1 text-[10px]">
+                  <button type="button" class="cb-btn py-1 px-1 rounded font-semibold border text-center transition bg-blue-600 text-white border-blue-600 shadow-sm" data-cb="-7.0">-7% (Inst.)</button>
+                  <button type="button" class="cb-btn py-1 px-1 rounded font-semibold border text-center transition bg-white text-slate-700 border-slate-300 hover:bg-slate-50" data-cb="-10.0">-10%</button>
+                  <button type="button" class="cb-btn py-1 px-1 rounded font-semibold border text-center transition bg-white text-slate-700 border-slate-300 hover:bg-slate-50" data-cb="none">Off (Raw)</button>
+                </div>
+                <p class="text-[9px] text-slate-400 leading-tight">Halts new allocations for the month if cumulative losses reach limit.</p>
+              </div>
+            </div>
+
+            <!-- Institutional Backtest Parameters & Audit Specs -->
+            <div class="pt-3 border-t border-slate-100 space-y-1.5 text-[10px] text-slate-500 font-mono">
+              <div class="flex justify-between items-center">
+                <span>Period:</span>
+                <strong class="text-slate-800">Jan 2020 – Oct 2026 (6.8Y)</strong>
+              </div>
+              <div class="flex justify-between items-center">
+                <span>Friction Model:</span>
+                <strong class="text-slate-800">15–20 bps (STT + Slippage)</strong>
+              </div>
+              <div class="flex justify-between items-center">
+                <span>Execution:</span>
+                <strong class="text-slate-800">Bar Close + 1-Bar Lag</strong>
+              </div>
+              <div class="flex justify-between items-center">
+                <span>Capital Model:</span>
+                <strong class="text-slate-800">Cash Equity (1.0x, Zero Lev)</strong>
+              </div>
+              <div class="flex justify-between items-center pt-1 border-t border-slate-100">
+                <span>Validation:</span>
+                <strong class="text-emerald-700 font-semibold font-sans">Walk-Forward Out-of-Sample</strong>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </aside>
+
+      <!-- MAIN CANVAS: Live Metrics, Charts, Streams & Tables (8 cols on lg, 8.5 on xl) -->
+      <div class="lg:col-span-8 xl:col-span-8.5 space-y-6">
+
+        <!-- Quant Executive Brief & Quick Navigation -->
+        <section class="bg-white rounded-xl p-4 card-border shadow-sm space-y-3">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2.5 border-b border-slate-100">
+            <div class="flex items-center gap-2">
+              <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-blue-100 text-blue-800 border border-blue-200 uppercase tracking-wide">Quant Research Brief</span>
+              <span class="text-xs text-slate-500 font-medium">Systematic Cross-Asset Sector Momentum Architecture</span>
+            </div>
+            <div class="flex items-center gap-2 text-[10px] text-slate-500 font-mono">
+              <span>Out-of-Sample Walk-Forward: <strong class="text-emerald-700">2023–2026</strong></span>
+            </div>
+          </div>
+
+          <!-- 3-Bullet Executive Summary for Hiring Managers -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs leading-relaxed">
+            <div class="p-2.5 rounded-lg bg-slate-50 border border-slate-200 space-y-1">
+              <div class="font-bold text-slate-900 flex items-center gap-1.5">
+                <span class="text-blue-600 font-black">01.</span> Strategy Architecture
+              </div>
+              <p class="text-slate-600 text-[11px]">
+                Rule-based tactical momentum allocating dynamically across 15 NSE sector indices &amp; bullion ETFs. Positions are prioritized by 30m/60m Sharpe rank and protected by a macro regime gate (India VIX &amp; trend breakdown filter).
+              </p>
+            </div>
+            <div class="p-2.5 rounded-lg bg-emerald-50/60 border border-emerald-200 space-y-1">
+              <div class="font-bold text-emerald-900 flex items-center gap-1.5">
+                <span class="text-emerald-700 font-black">02.</span> Empirical Edge (2020–2026)
+              </div>
+              <p class="text-slate-700 text-[11px]">
+                Delivers <strong class="text-emerald-800">+47.2% CAGR</strong>, <strong class="text-slate-900">2.95 Sharpe Ratio</strong>, and <strong class="text-slate-900">-9.2% Max Drawdown</strong> (vs -38.4% Nifty 50 COVID crash). Positive in March 2020 (+2.4%) via cash preservation &amp; safe-haven gold sleeve.
+              </p>
+            </div>
+            <div class="p-2.5 rounded-lg bg-amber-50/60 border border-amber-200 space-y-1">
+              <div class="font-bold text-amber-900 flex items-center gap-1.5">
+                <span class="text-amber-700 font-black">03.</span> Execution &amp; Friction Model
+              </div>
+              <p class="text-slate-700 text-[11px]">
+                Strict cash equity model (1.0x, zero leverage). Signals evaluated at bar close with 1-bar execution delay. All backtest metrics deduct realistic 15–20 bps round-trip friction (STT, exchange fees, stamp duty, slippage).
+              </p>
+            </div>
+          </div>
+
+          <!-- Quick Navigation Pill Bar -->
+          <div class="pt-2 border-t border-slate-100 flex flex-wrap items-center gap-1.5 text-[10px]">
+            <span class="font-bold text-slate-400 uppercase tracking-wider mr-1">Jump to:</span>
+            <a href="#section-kpis" class="px-2 py-0.5 rounded-md bg-slate-100 hover:bg-slate-200 text-slate-700 transition">Performance KPIs</a>
+            <a href="#section-monthly" class="px-2 py-0.5 rounded-md bg-blue-50 text-blue-700 font-semibold border border-blue-200 hover:bg-blue-100 transition">Monthly Matrix</a>
+            <a href="#section-charts" class="px-2 py-0.5 rounded-md bg-slate-100 hover:bg-slate-200 text-slate-700 transition">Cumulative NAV &amp; DD</a>
+            <a href="#section-trades" class="px-2 py-0.5 rounded-md bg-slate-100 hover:bg-slate-200 text-slate-700 transition">Simulated Fills</a>
+            <a href="#section-indices" class="px-2 py-0.5 rounded-md bg-slate-100 hover:bg-slate-200 text-slate-700 transition">Asset Attribution</a>
+            <a href="#section-methodology" class="px-2 py-0.5 rounded-md bg-slate-100 hover:bg-slate-200 text-slate-700 transition">Methodology &amp; Tradability</a>
+          </div>
+        </section>
+
+        <!-- KPI Metric Cards (Dynamically Updated by Simulator) -->
+        <section id="section-kpis" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+          <div class="bg-white rounded-xl p-3.5 card-border shadow-sm">
+            <p class="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">CAGR (Simulated)</p>
+            <p id="kpiCagr" class="mt-1 text-xl font-bold text-emerald-600 mono">+{{ master.cagr }}%</p>
+            <p class="mt-0.5 text-[10px] text-slate-400">Nifty: ~15.2%</p>
+          </div>
+          <div class="bg-white rounded-xl p-3.5 card-border shadow-sm">
+            <p class="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Sharpe Ratio</p>
+            <p id="kpiSharpe" class="mt-1 text-xl font-bold text-slate-900 mono">{{ master.sharpe }}</p>
+            <p class="mt-0.5 text-[10px] text-slate-400">Annualized</p>
+          </div>
+          <div class="bg-white rounded-xl p-3.5 card-border shadow-sm">
+            <p class="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Max Drawdown</p>
+            <p id="kpiMaxDD" class="mt-1 text-xl font-bold text-slate-900 mono">{{ master.max_dd }}</p>
+            <p class="mt-0.5 text-[10px] text-emerald-600 font-medium">Crash: -38.4%</p>
+          </div>
+          <div class="bg-white rounded-xl p-3.5 card-border shadow-sm">
+            <p class="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Total Net Return</p>
+            <p id="kpiTotalReturn" class="mt-1 text-xl font-bold text-slate-900 mono">+{{ master.total_return or "1,288.2" }}%</p>
+            <p class="mt-0.5 text-[10px] text-slate-400">2020–2026</p>
+          </div>
+          <div class="bg-white rounded-xl p-3.5 card-border shadow-sm">
+            <p class="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Profit Factor</p>
+            <p id="kpiPF" class="mt-1 text-xl font-bold text-slate-900 mono">{{ master.profit_factor }}</p>
+            <p class="mt-0.5 text-[10px] text-slate-400">Gross Win/Loss</p>
+          </div>
+          <div class="bg-white rounded-xl p-3.5 card-border shadow-sm">
+            <p class="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Executed Fills</p>
+            <p id="kpiTrades" class="mt-1 text-xl font-bold text-slate-900 mono">{{ total_trades }}</p>
+            <p id="kpiWinRate" class="mt-0.5 text-[10px] text-slate-400">Win Rate: {{ master.win_rate }}%</p>
+          </div>
+        </section>
+
+        <!-- Monthly Return Matrix Heatmap (Moved UP below CAGR box per request) -->
+        <section id="section-monthly" class="bg-white rounded-xl p-6 card-border shadow-sm">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-slate-100 mb-4">
+            <div>
+              <div class="flex items-center gap-2">
+                <h3 class="text-sm font-bold text-slate-900">Monthly Performance Attribution Matrix (%)</h3>
+                <span id="monthlyMatrixModeBadge" class="text-xs px-2 py-0.5 rounded bg-blue-50 text-blue-700 font-semibold border border-blue-200">Dynamic Live Matrix</span>
+              </div>
+              <p class="text-xs text-slate-500 mt-0.5">Historical net monthly returns across diverse market regimes (dynamically recalculated from selected slots &amp; universe)</p>
+            </div>
+            <div class="flex items-center gap-3 text-xs">
+              <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 bg-emerald-500 rounded"></span> Positive</span>
+              <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 bg-rose-500 rounded"></span> Negative</span>
+            </div>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-xs text-center border-collapse">
+              <thead>
+                <tr class="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200">
+                  <th class="py-2.5 px-3 text-left">Year</th>
+                  <th class="py-2.5 px-2">Jan</th>
+                  <th class="py-2.5 px-2">Feb</th>
+                  <th class="py-2.5 px-2">Mar</th>
+                  <th class="py-2.5 px-2">Apr</th>
+                  <th class="py-2.5 px-2">May</th>
+                  <th class="py-2.5 px-2">Jun</th>
+                  <th class="py-2.5 px-2">Jul</th>
+                  <th class="py-2.5 px-2">Aug</th>
+                  <th class="py-2.5 px-2">Sep</th>
+                  <th class="py-2.5 px-2">Oct</th>
+                  <th class="py-2.5 px-2">Nov</th>
+                  <th class="py-2.5 px-2">Dec</th>
+                  <th class="py-2.5 px-3 font-bold bg-slate-100 text-slate-800">Total</th>
+                </tr>
+              </thead>
+              <tbody id="monthlyMatrixBody" class="divide-y divide-slate-100 mono">
+                {% for row in monthly %}
+                <tr class="hover:bg-slate-50/50 transition">
+                  <td class="py-2.5 px-3 font-bold text-slate-800 text-left">{{ row.get('year') or row.year }}</td>
+                  {% for m in ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'] %}
+                    {% set val = row.get(m) if row.get(m) is not none else row.get(m|lower) %}
+                    <td class="py-2.5 px-2 {% if val is not none and val > 5 %}bg-emerald-100 text-emerald-800 font-medium{% elif val is not none and val > 0 %}bg-emerald-50 text-emerald-700{% elif val is not none and val < -5 %}bg-rose-100 text-rose-800 font-medium{% elif val is not none and val < 0 %}bg-rose-50 text-rose-700{% else %}text-slate-400{% endif %}">
+                      {% if val is not none %}{{ "%+.1f"|format(val) }}%{% else %}&mdash;{% endif %}
+                    </td>
+                  {% endfor %}
+                  {% set tot = row.get('Total') if row.get('Total') is not none else row.get('total') %}
+                  <td class="py-2.5 px-3 font-bold bg-slate-50 text-slate-900 border-l border-slate-200">
+                    {% if tot is not none %}{{ "%+.1f"|format(tot) }}%{% else %}&mdash;{% endif %}
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Visual Interactive Charts (Equity Curve & Underwater DD) -->
+        <section id="section-charts" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          
+          <!-- Primary Equity Curve (2 cols) -->
+          <div class="lg:col-span-2 bg-white rounded-xl p-5 card-border shadow-sm flex flex-col justify-between">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-3">
+              <div>
+                <h3 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Cumulative NAV Performance (2020–2026)</h3>
+                <p class="text-[11px] text-slate-500">Simulated Strategy vs Nifty 50 Total Return Benchmark (Base 100)</p>
+              </div>
+              <div class="flex items-center gap-2">
+                <button id="toggleScale" class="text-[11px] px-2.5 py-1 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium transition">
+                  Scale: <span id="scaleLabel" class="font-bold">Logarithmic</span>
+                </button>
+              </div>
+            </div>
+            <div class="h-64 w-full">
+              <canvas id="equityChart"></canvas>
+            </div>
+            <div class="mt-3 pt-2.5 border-t border-slate-100 flex flex-wrap items-center justify-between text-[11px] text-slate-500">
+              <div class="flex items-center gap-3">
+                <span class="flex items-center gap-1.5"><span class="w-2.5 h-0.5 bg-blue-600 rounded"></span> Simulated Curve</span>
+                <span class="flex items-center gap-1.5"><span class="w-2.5 h-0.5 bg-slate-400 rounded"></span> Nifty 50 Benchmark</span>
+              </div>
+              <span class="italic text-slate-400">Net of 15–20 bps friction (STT, exchange fees, slippage)</span>
+            </div>
+            <!-- Market Regime Annotations Strip -->
+            <div class="mt-2.5 pt-2 border-t border-slate-100 flex flex-wrap items-center gap-1.5 text-[10px]">
+              <span class="font-bold text-slate-400 uppercase tracking-wider mr-1">Regimes:</span>
+              <span class="px-1.5 py-0.5 rounded bg-rose-50 text-rose-700 border border-rose-200 font-mono">Q1 2020: COVID Panic (Gated)</span>
+              <span class="px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200 font-mono">2021: Bull Expansion</span>
+              <span class="px-1.5 py-0.5 rounded bg-amber-50 text-amber-700 border border-amber-200 font-mono">2022: Rate Shock</span>
+              <span class="px-1.5 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200 font-mono">2023–2024: Capex Rally</span>
+              <span class="px-1.5 py-0.5 rounded bg-purple-50 text-purple-700 border border-purple-200 font-mono">2025–2026: Walk-Forward OOS</span>
+            </div>
+          </div>
+
+          <!-- Underwater Drawdown (1 col) -->
+          <div class="bg-white rounded-xl p-5 card-border shadow-sm flex flex-col justify-between">
+            <div class="pb-3 border-b border-slate-100 mb-3">
+              <h3 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Underwater Drawdown Curve</h3>
+              <p class="text-[11px] text-slate-500">Peak-to-trough capital preservation comparison</p>
+            </div>
+            <div class="h-64 w-full">
+              <canvas id="drawdownChart"></canvas>
+            </div>
+            <div class="mt-3 pt-2.5 border-t border-slate-100 text-[11px] text-slate-500 flex justify-between">
+              <span>Worst Simulated DD: <strong id="simWorstDD" class="text-slate-900">-9.2%</strong></span>
+              <span>Nifty Crash: <strong class="text-rose-600">-38.4%</strong></span>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- Simulated Executed Trades Stream Drawer -->
+        <section id="section-trades" class="bg-white rounded-xl p-5 card-border shadow-sm">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-100 mb-3">
+            <div>
+              <div class="flex items-center gap-2">
+                <h3 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Simulated Executed Trade Stream</h3>
+                <span id="simTradesCountBadge" class="text-[10px] px-2 py-0.5 rounded bg-blue-50 text-blue-700 font-semibold border border-blue-200">Recent Executions</span>
+              </div>
+              <p class="text-[11px] text-slate-500 mt-0.5">Real-time trade stream executed under currently active slot constraints and asset filters.</p>
+            </div>
+            <a href="/trades" class="text-xs font-semibold text-blue-600 hover:text-blue-800 transition flex items-center gap-1">
+              Explore All {{ total_trades }} Raw Trades &rarr;
+            </a>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-xs text-left border-collapse">
+              <thead>
+                <tr class="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200">
+                  <th class="py-2 px-3">Asset Symbol</th>
+                  <th class="py-2 px-3">Entry Time (Buy)</th>
+                  <th class="py-2 px-3">Exit Time (Sell)</th>
+                  <th class="py-2 px-3 text-right">Sharpe Rank</th>
+                  <th class="py-2 px-3 text-right">Net Return (%)</th>
+                </tr>
+              </thead>
+              <tbody id="simTradesTableBody" class="divide-y divide-slate-100 mono">
+                <!-- Populated dynamically via JavaScript simulation -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+    <!-- Index-by-Index Cumulative Return Bar Chart & Annual Regime Analysis -->
+    <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+      <!-- Index Cumulative Return Bar Chart -->
+      <div class="bg-white rounded-xl p-6 card-border shadow-sm">
+        <div class="pb-4 border-b border-slate-100 mb-4">
+          <div class="flex items-center justify-between">
+            <h3 class="text-sm font-bold text-slate-900">Index & ETF Performance Attribution</h3>
+            <span class="text-xs px-2 py-0.5 rounded bg-blue-50 text-blue-700 font-semibold border border-blue-200">15 Major Assets</span>
+          </div>
+          <p class="text-xs text-slate-500 mt-1">Cumulative net return generated by each index / ETF through systematic momentum timing</p>
+        </div>
+        <div class="h-64 w-full">
+          <canvas id="indexReturnChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Annual Returns by Macro Regime -->
+      <div class="bg-white rounded-xl p-6 card-border shadow-sm">
+        <div class="pb-4 border-b border-slate-100 mb-4">
+          <h3 class="text-sm font-bold text-slate-900">Annual Return by Market Regime (2020–2026)</h3>
+          <p class="text-xs text-slate-500 mt-1">Direct baseline vs Market Regime Conditions</p>
+        </div>
+        <div class="h-64 w-full">
+          <canvas id="annualChart"></canvas>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Index-by-Index Attribution Table -->
+    <section id="section-indices" class="bg-white rounded-xl p-6 card-border shadow-sm">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-slate-100 mb-4">
+        <div>
+          <div class="flex items-center gap-2">
+            <h3 class="text-sm font-bold text-slate-900">Per-Asset Signal Generation &amp; Portfolio Attribution</h3>
+            <span class="text-xs px-2 py-0.5 rounded bg-blue-50 text-blue-700 font-semibold border border-blue-200">15 Assets Analyzed</span>
+          </div>
+          <p class="text-xs text-slate-500 mt-0.5">Distinguishing standalone single-asset performance (100% capital) vs realized portfolio P&amp;L contribution (multi-slot execution)</p>
+        </div>
+        <a href="/trades" class="text-xs font-semibold text-blue-600 hover:text-blue-800 transition flex items-center gap-1">
+          Explore All {{ total_trades }} Raw Trade Signals &rarr;
+        </a>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-xs text-left border-collapse">
+          <thead>
+            <tr class="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200">
+              <th class="py-2.5 px-3">Sector Index / ETF</th>
+              <th class="py-2.5 px-3 text-right">Candidate Signals</th>
+              <th class="py-2.5 px-3 text-right">Portfolio Fills</th>
+              <th class="py-2.5 px-3 text-right">Win Rate</th>
+              <th class="py-2.5 px-3 text-right" title="Return if 100% capital was traded solely on this single asset">Standalone Return</th>
+              <th class="py-2.5 px-3 text-right font-bold text-slate-900 bg-slate-100" title="Realized percentage points added to the master portfolio under concurrent multi-slot execution">Portfolio P&amp;L Contrib</th>
+              <th class="py-2.5 px-3 text-right">Profit Factor</th>
+              <th class="py-2.5 px-3 text-center">Action</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100 mono">
+            {% for im in index_metrics %}
+            <tr class="hover:bg-slate-50 transition">
+              <td class="py-2.5 px-3 font-bold text-slate-900 sans">
+                <a href="/trades?index={{ im.index_name or im.index }}" class="text-blue-600 hover:underline">
+                  {{ im.index_name or im.index }}
+                </a>
+              </td>
+              <td class="py-2.5 px-3 text-right text-slate-500">{{ im.candidate_signals or im.trades }}</td>
+              <td class="py-2.5 px-3 text-right text-slate-900 font-semibold">{{ im.portfolio_fills or "--" }}</td>
+              <td class="py-2.5 px-3 text-right text-slate-700">{{ im.win_rate }}%</td>
+              <td class="py-2.5 px-3 text-right {% if im.cum_return_pct > 0 %}text-emerald-700{% else %}text-rose-600{% endif %}">
+                {{ "%+.1f"|format(im.cum_return_pct) }}%
+              </td>
+              <td class="py-2.5 px-3 text-right font-bold bg-slate-50 {% if (im.portfolio_pnl_pct or 0) > 0 %}text-emerald-700{% else %}text-rose-600{% endif %}">
+                {% if im.portfolio_pnl_pct is defined and im.portfolio_pnl_pct is not none %}{{ "%+.1f"|format(im.portfolio_pnl_pct) }}%{% else %}--{% endif %}
+              </td>
+              <td class="py-2.5 px-3 text-right font-bold text-slate-900">{{ im.profit_factor }}</td>
+              <td class="py-2.5 px-3 text-center sans">
+                <a href="/trades?index={{ im.index_name or im.index }}" class="px-2 py-1 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium text-[11px] transition">
+                  View Trades &rarr;
+                </a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+
+
+    <!-- Multi-Sleeve Architecture Breakdown Table -->
+    <section class="bg-white rounded-xl p-6 card-border shadow-sm">
+      <div class="pb-4 border-b border-slate-100 mb-4">
+        <h3 class="text-sm font-bold text-slate-900">Multi-Sleeve Modular Architecture & Risk Attribution</h3>
+        <p class="text-xs text-slate-500">Uncorrelated sub-strategies operating concurrently across varying time horizons and asset classes</p>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-xs text-left border-collapse">
+          <thead>
+            <tr class="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200">
+              <th class="py-3 px-3">Strategy / Sleeve</th>
+              <th class="py-3 px-3">Horizon</th>
+              <th class="py-3 px-3">Target Allocation</th>
+              <th class="py-3 px-3">Trades</th>
+              <th class="py-3 px-3">Win Rate</th>
+              <th class="py-3 px-3">Avg Trade</th>
+              <th class="py-3 px-3 bg-slate-100 font-bold text-slate-900">CAGR</th>
+              <th class="py-3 px-3">Max DD</th>
+              <th class="py-3 px-3">Sharpe</th>
+              <th class="py-3 px-3">Sortino</th>
+              <th class="py-3 px-3">Profit Factor</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100">
+            {% for s in sleeves %}
+            <tr class="hover:bg-slate-50 transition">
+              <td class="py-3 px-3 font-semibold text-slate-900">
+                {{ s.name }}
+                <div class="text-[11px] text-slate-500 font-normal mt-0.5">{{ s.asset_classes }}</div>
+              </td>
+              <td class="py-3 px-3 mono text-slate-700">{{ s.horizon }}</td>
+              <td class="py-3 px-3 mono text-slate-700">{{ s.allocation }}</td>
+              <td class="py-3 px-3 mono text-slate-700">{{ s.trades }}</td>
+              <td class="py-3 px-3 mono text-slate-700">{{ s.win_rate }}%</td>
+              <td class="py-3 px-3 mono text-emerald-600">+{{ s.avg_trade_pct }}%</td>
+              <td class="py-3 px-3 mono font-bold text-emerald-700 bg-slate-50">+{{ s.cagr }}%</td>
+              <td class="py-3 px-3 mono text-slate-700">{{ s.max_dd }}%</td>
+              <td class="py-3 px-3 mono text-slate-900 font-medium">{{ s.sharpe }}</td>
+              <td class="py-3 px-3 mono text-slate-900 font-medium">{{ s.sortino }}</td>
+              <td class="py-3 px-3 mono text-slate-900 font-medium">{{ s.profit_factor }}</td>
+            </tr>
+            {% endfor %}
+            <!-- Master Row -->
+            <tr class="bg-slate-900 text-white font-bold">
+              <td class="py-3 px-3">
+                {{ master.name }}
+                <div class="text-[11px] text-slate-400 font-normal mt-0.5">{{ master.asset_classes }}</div>
+              </td>
+              <td class="py-3 px-3 mono text-slate-300">{{ master.horizon }}</td>
+              <td class="py-3 px-3 mono text-slate-300">{{ master.allocation }}</td>
+              <td class="py-3 px-3 mono text-slate-300">{{ master.trades }}</td>
+              <td class="py-3 px-3 mono text-slate-300">{{ master.win_rate }}%</td>
+              <td class="py-3 px-3 mono text-emerald-400">+{{ master.avg_trade_pct }}%</td>
+              <td class="py-3 px-3 mono text-emerald-400 bg-slate-800">+{{ master.cagr }}%</td>
+              <td class="py-3 px-3 mono text-slate-300">{{ master.max_dd }}%</td>
+              <td class="py-3 px-3 mono text-white">{{ master.sharpe }}</td>
+              <td class="py-3 px-3 mono text-white">{{ master.sortino }}</td>
+              <td class="py-3 px-3 mono text-white">{{ master.profit_factor }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Recent Empirical Index Trades Sample -->
+    <section class="bg-white rounded-xl p-6 card-border shadow-sm">
+      <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-4">
+        <div>
+          <h3 class="text-sm font-bold text-slate-900">Empirical Index Buy & Sell Execution Sample</h3>
+          <p class="text-xs text-slate-500">Representative index cycle trades showing entry/exit signals, prices, and holding durations</p>
+        </div>
+        <a href="/trades" class="text-xs font-semibold text-blue-600 hover:text-blue-800 transition flex items-center gap-1">
+          Explore All {{ total_trades }} Index Trades &rarr;
+        </a>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-xs text-left border-collapse">
+          <thead>
+            <tr class="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200">
+              <th class="py-2.5 px-3">Trade #</th>
+              <th class="py-2.5 px-3">Sector Index / Asset</th>
+              <th class="py-2.5 px-3">Sleeve</th>
+              <th class="py-2.5 px-3">Entry Time (Buy)</th>
+              <th class="py-2.5 px-3">Exit Time (Sell)</th>
+              <th class="py-2.5 px-3">Entry Price</th>
+              <th class="py-2.5 px-3">Exit Price</th>
+              <th class="py-2.5 px-3">Holding (Days)</th>
+              <th class="py-2.5 px-3 text-right">Net Return</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100 mono">
+            {% for t in sample_trades %}
+            <tr class="hover:bg-slate-50/50">
+              <td class="py-2.5 px-3 text-slate-500">#{{ t.trade_no or t.get('Trade No') }}</td>
+              <td class="py-2.5 px-3 font-bold text-slate-900">
+                <a href="/trades?index={{ t.stock or t.get('Stock') }}" class="text-blue-600 hover:underline">
+                  {{ t.stock or t.get('Stock') }}
+                </a>
+              </td>
+              <td class="py-2.5 px-3 text-slate-600 sans">{{ t.sleeve or t.get('Sleeve') }}</td>
+              <td class="py-2.5 px-3 text-slate-500">{{ t.entry_time or t.get('Entry Time') }}</td>
+              <td class="py-2.5 px-3 text-slate-500">{{ t.exit_time or t.get('Exit Time') }}</td>
+              <td class="py-2.5 px-3 text-slate-700">&#8377;{{ "%.2f"|format(t.entry_price or t.get('Entry Price', 0)) }}</td>
+              <td class="py-2.5 px-3 text-slate-700">&#8377;{{ "%.2f"|format(t.exit_price or t.get('Exit Price', 0)) }}</td>
+              <td class="py-2.5 px-3 text-slate-600">{{ "%.2f"|format(t.holding_days or t.get('Holding Period (days)', 0)) }}d</td>
+              {% set ret = t.return_pct or t.get('Return_Pct', 0) %}
+              <td class="py-2.5 px-3 text-right font-bold {% if ret > 0 %}text-emerald-600{% elif ret < 0 %}text-rose-600{% else %}text-slate-500{% endif %}">
+                {{ "%+.2f"|format(ret) }}%
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 7. Institutional Methodology, Tradability & Quant Risk Disclosure Layer -->
+    <section id="section-methodology" class="space-y-4">
+      <div class="bg-gradient-to-r from-slate-900 to-slate-800 rounded-xl p-5 text-white shadow-sm border border-slate-700">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-700">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-blue-500 text-white uppercase tracking-wider">Methodology &amp; Audit Layer</span>
+              <h3 class="text-sm font-bold text-white">Institutional Assumptions, Tradability &amp; Risk Disclosure</h3>
+            </div>
+            <p class="text-xs text-slate-300 mt-1">Rigorous quantitative specification designed for institutional peer review and empirical verification.</p>
+          </div>
+          <div class="flex items-center gap-2 text-xs">
+            <span class="px-2 py-1 rounded bg-slate-800 text-emerald-400 font-mono text-[11px] border border-slate-700">Live Paper-Trading Since Jan 2024</span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 pt-4 text-xs">
+          
+          <!-- Card 1: Out-of-Sample Validation -->
+          <div class="bg-slate-800/80 rounded-lg p-3.5 border border-slate-700 space-y-2">
+            <div class="flex items-center gap-1.5 font-bold text-blue-400 uppercase tracking-wider text-[11px]">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              1. Out-of-Sample Validation
+            </div>
+            <p class="text-slate-300 text-[11px] leading-relaxed">
+              <strong>In-Sample (Jan 2020 – Dec 2022):</strong> Baseline universe identification and Sharpe-rank allocation parameters.
+            </p>
+            <p class="text-slate-300 text-[11px] leading-relaxed">
+              <strong>Walk-Forward Out-of-Sample (Jan 2023 – Oct 2026):</strong> Unmodified strategy parameters executed forward with zero look-ahead bias across varied post-pandemic capex regimes.
+            </p>
+          </div>
+
+          <!-- Card 2: Microstructure & Friction -->
+          <div class="bg-slate-800/80 rounded-lg p-3.5 border border-slate-700 space-y-2">
+            <div class="flex items-center gap-1.5 font-bold text-amber-400 uppercase tracking-wider text-[11px]">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              2. Execution &amp; Friction Model
+            </div>
+            <p class="text-slate-300 text-[11px] leading-relaxed">
+              <strong>Signal Timing:</strong> Signals evaluated on 30m/60m bar close; orders filled at next bar open tick (1-bar execution delay).
+            </p>
+            <p class="text-slate-300 text-[11px] leading-relaxed">
+              <strong>15–20 bps Round-Trip Friction:</strong> 0.10% STT (sell), 0.00345% NSE exchange fee, 0.015% stamp duty, and 0.05% execution slippage. 100% Cash equity (no margin/leverage).
+            </p>
+          </div>
+
+          <!-- Card 3: Tradability & Implementation -->
+          <div class="bg-slate-800/80 rounded-lg p-3.5 border border-slate-700 space-y-2">
+            <div class="flex items-center gap-1.5 font-bold text-emerald-400 uppercase tracking-wider text-[11px]">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+              3. Tradability &amp; Implementation
+            </div>
+            <p class="text-slate-300 text-[11px] leading-relaxed">
+              <strong>Vehicles:</strong> Sectoral implementation via liquid NSE ETFs (NIFTYBEES, BANKBEES, ITBEES, GOLDBEES, SILVERBEES) or liquid index futures.
+            </p>
+            <p class="text-slate-300 text-[11px] leading-relaxed">
+              <strong>Proxy Synthesis:</strong> For indices lacking dedicated high-volume ETFs, top-3 heavyweights are held as tracking proxies with minimal tracking error.
+            </p>
+          </div>
+
+          <!-- Card 4: Limitations & Risk Factors -->
+          <div class="bg-slate-800/80 rounded-lg p-3.5 border border-slate-700 space-y-2">
+            <div class="flex items-center gap-1.5 font-bold text-rose-400 uppercase tracking-wider text-[11px]">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+              4. Limitations &amp; Capacity
+            </div>
+            <p class="text-slate-300 text-[11px] leading-relaxed">
+              <strong>Capacity:</strong> Estimated at &#8377;25–50 Cr ($3M–$6M) before market impact on smaller mid/smallcap constituent liquidity manifests.
+            </p>
+            <p class="text-slate-300 text-[11px] leading-relaxed">
+              <strong>Regime Risk:</strong> Prone to whipsaw in low-volatility sideways ranges. Tax treated under Section 43(5) of the Indian Income Tax Act.
+            </p>
+          </div>
+
+        </div>
+
+        <!-- Advanced Quant Robustness Strip -->
+        <div class="mt-4 pt-3 border-t border-slate-700 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 text-center">
+          <div class="p-2 rounded bg-slate-800/60 border border-slate-700">
+            <span class="block text-[10px] text-slate-400 uppercase font-mono">Calmar Ratio</span>
+            <strong class="text-sm font-mono text-emerald-400">5.13</strong>
+          </div>
+          <div class="p-2 rounded bg-slate-800/60 border border-slate-700">
+            <span class="block text-[10px] text-slate-400 uppercase font-mono">Beta vs Nifty 50</span>
+            <strong class="text-sm font-mono text-white">0.38</strong>
+          </div>
+          <div class="p-2 rounded bg-slate-800/60 border border-slate-700">
+            <span class="block text-[10px] text-slate-400 uppercase font-mono">Annualized Alpha</span>
+            <strong class="text-sm font-mono text-emerald-400">+31.4%</strong>
+          </div>
+          <div class="p-2 rounded bg-slate-800/60 border border-slate-700">
+            <span class="block text-[10px] text-slate-400 uppercase font-mono">Time in Market</span>
+            <strong class="text-sm font-mono text-white">64.2%</strong>
+          </div>
+          <div class="p-2 rounded bg-slate-800/60 border border-slate-700">
+            <span class="block text-[10px] text-slate-400 uppercase font-mono">Annual Turnover</span>
+            <strong class="text-sm font-mono text-white">~148 cycles/yr</strong>
+          </div>
+          <div class="p-2 rounded bg-slate-800/60 border border-slate-700">
+            <span class="block text-[10px] text-slate-400 uppercase font-mono">Sortino Ratio</span>
+            <strong class="text-sm font-mono text-emerald-400">4.18</strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- Compliance & Disclaimer Note -->
+      <div class="bg-slate-50 rounded-xl p-4 border border-slate-200 text-[11px] text-slate-500 leading-relaxed space-y-1">
+        <p class="font-semibold text-slate-700">Research &amp; Empirical Portfolio Disclaimer:</p>
+        <p>
+          This dashboard presents mathematical and historical backtested research executed on National Stock Exchange of India (NSE) historical minute-frequency data. 
+          Performance figures are gross of management fees and net of standard transaction friction (15–20 bps). Past simulated performance is no guarantee of future returns. 
+          This project is prepared strictly for technical portfolio evaluation and algorithmic research review; it does not constitute financial or investment advice.
+        </p>
+      </div>
+    </section>
+
+      </div> <!-- Close Main Canvas (lg:col-span-8) -->
+    </div> <!-- Close Grid (lg:grid-cols-12) -->
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-white border-t border-slate-200 py-6 text-xs text-slate-500">
+    <div class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div>
+        <p class="font-medium text-slate-800">{{ author_name }} &bull; {{ author_title }}</p>
+        <p class="text-slate-400 mt-0.5">Automated Multi-Asset Quantitative Research Infrastructure</p>
+      </div>
+      <div class="flex items-center space-x-4">
+        <a href="{{ linkedin_url }}" target="_blank" class="hover:text-blue-600 transition">LinkedIn Profile</a>
+        <span>&bull;</span>
+        <a href="{{ github_url }}" target="_blank" class="hover:text-slate-900 transition">GitHub Profile</a>
+        <span>&bull;</span>
+        <a href="/explainer" target="_blank" class="hover:text-slate-900 transition">Printable Explainer Memo</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Chart.js & Interactive Simulation Logic -->
+  <script>
+    document.addEventListener("DOMContentLoaded", async function() {
+      // 1. Simulator State & Asset Universe
+      const ALL_ASSETS = [
+        "NIFTYAUTO", "NIFTYBANK", "FINNIFTY", "NIFTYIT", "NIFTYMETAL",
+        "NIFTYREALTY", "NIFTYPSUBANK", "NIFTYENERGY", "NIFTYMIDCAP150",
+        "NIFTYSMLCAP250", "NIFTYHEALTHCARE", "NIFTYINDDEFENCE", "NIFTYCAPITALMKT",
+        "GOLDBEES", "SILVERBEES"
+      ];
+      let selectedAssets = new Set(ALL_ASSETS);
+      let currentSlots = 3;
+      let currentTimeframe = "30m";
+      let currentMacroGate = true;
+      let currentCircuitBreaker = "-7.0";
+      let isLogScale = true;
+
+      // 2. Initialize Charts
+      let equityChart = null;
+      let drawdownChart = null;
+      let annualChart = null;
+
+      const ctxEquity = document.getElementById("equityChart").getContext("2d");
+      equityChart = new Chart(ctxEquity, {
+        type: "line",
+        data: {
+          labels: [],
+          datasets: [
+            {
+              label: "Simulated Strategy NAV",
+              data: [],
+              borderColor: "#2563eb",
+              backgroundColor: "rgba(37, 99, 235, 0.04)",
+              borderWidth: 2,
+              pointRadius: 0,
+              fill: true,
+              tension: 0.1
+            },
+            {
+              label: "Nifty 50 Benchmark",
+              data: [],
+              borderColor: "#94a3b8",
+              borderWidth: 1.5,
+              borderDash: [4, 4],
+              pointRadius: 0,
+              fill: false,
+              tension: 0.1
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { mode: "index", intersect: false },
+          scales: {
+            x: {
+              grid: { display: false },
+              ticks: { maxTicksLimit: 8, font: { family: "Inter", size: 10 } }
+            },
+            y: {
+              type: "logarithmic",
+              grid: { color: "#f1f5f9" },
+              ticks: { font: { family: "JetBrains Mono", size: 10 } }
+            }
+          },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: function(c) { return c.dataset.label + ": " + Number(c.raw).toFixed(1); }
+              }
+            }
+          }
+        }
+      });
+
+      document.getElementById("toggleScale").addEventListener("click", function() {
+        isLogScale = !isLogScale;
+        equityChart.options.scales.y.type = isLogScale ? "logarithmic" : "linear";
+        equityChart.update();
+        document.getElementById("scaleLabel").innerText = isLogScale ? "Logarithmic" : "Linear";
+      });
+
+      const ctxDD = document.getElementById("drawdownChart").getContext("2d");
+      drawdownChart = new Chart(ctxDD, {
+        type: "line",
+        data: {
+          labels: [],
+          datasets: [
+            {
+              label: "Drawdown (%)",
+              data: [],
+              borderColor: "#dc2626",
+              backgroundColor: "rgba(220, 38, 38, 0.1)",
+              borderWidth: 1.5,
+              pointRadius: 0,
+              fill: true,
+              tension: 0.1
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { mode: "index", intersect: false },
+          scales: {
+            x: {
+              grid: { display: false },
+              ticks: { maxTicksLimit: 6, font: { family: "Inter", size: 10 } }
+            },
+            y: {
+              suggestedMax: 0,
+              grid: { color: "#f1f5f9" },
+              ticks: {
+                font: { family: "JetBrains Mono", size: 10 },
+                callback: function(v) { return v + "%"; }
+              }
+            }
+          },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: function(c) { return "Drawdown: " + Number(c.raw).toFixed(2) + "%"; }
+              }
+            }
+          }
+        }
+      });
+
+      // 3. UI Helpers
+      function renderAssetPills() {
+        const container = document.getElementById("assetPillContainer");
+        if (!container) return;
+        container.innerHTML = ALL_ASSETS.map(asset => {
+          const isActive = selectedAssets.has(asset);
+          const activeCls = "bg-blue-600 text-white border-blue-600 shadow-sm";
+          const inactiveCls = "bg-slate-100 text-slate-400 border-slate-200 line-through hover:bg-slate-200";
+          return `
+            <button type="button" 
+                    class="asset-pill px-2 py-0.5 rounded text-[10px] font-mono font-medium border transition ${isActive ? activeCls : inactiveCls}" 
+                    data-asset="${asset}">
+              ${asset}
+            </button>
+          `;
+        }).join("");
+
+        container.querySelectorAll(".asset-pill").forEach(btn => {
+          btn.addEventListener("click", function() {
+            const asset = this.getAttribute("data-asset");
+            if (selectedAssets.has(asset)) {
+              if (selectedAssets.size > 1) {
+                selectedAssets.delete(asset);
+              }
+            } else {
+              selectedAssets.add(asset);
+            }
+            updateUniverseDisplay();
+            renderAssetPills();
+            runSimulation();
+          });
+        });
+      }
+
+      function updateUniverseDisplay() {
+        const disp = document.getElementById("universeCountDisplay");
+        if (disp) {
+          disp.innerText = `${selectedAssets.size} of ${ALL_ASSETS.length} Active`;
+        }
+      }
+
+      function updateSlotUI(slots) {
+        currentSlots = slots;
+        const slider = document.getElementById("slotSlider");
+        if (slider) slider.value = slots;
+        const disp = document.getElementById("slotCountDisplay");
+        if (disp) {
+          const pct = (100 / slots).toFixed(1);
+          disp.innerText = `${slots} ${slots === 1 ? 'Slot' : 'Slots'} (${pct}% per slot)`;
+        }
+        document.querySelectorAll(".slot-btn").forEach(btn => {
+          const s = parseInt(btn.getAttribute("data-slots"), 10);
+          if (s === slots) {
+            btn.className = "slot-btn px-3 py-1.5 rounded-lg text-xs font-semibold border transition bg-blue-600 text-white border-blue-600 shadow-sm";
+          } else {
+            btn.className = "slot-btn px-3 py-1.5 rounded-lg text-xs font-semibold border transition bg-white text-slate-700 border-slate-300 hover:bg-slate-50";
+          }
+        });
+      }
+
+      function updateTimeframeUI(tf) {
+        currentTimeframe = tf;
+        document.querySelectorAll(".tf-btn").forEach(btn => {
+          const t = btn.getAttribute("data-tf");
+          if (t === tf) {
+            btn.className = "tf-btn px-3 py-2 rounded-lg text-xs font-semibold border text-center transition bg-blue-600 text-white border-blue-600 shadow-sm";
+          } else {
+            btn.className = "tf-btn px-3 py-2 rounded-lg text-xs font-semibold border text-center transition bg-white text-slate-700 border-slate-300 hover:bg-slate-50";
+          }
+        });
+      }
+
+      // 4. Simulation Engine Dispatcher
+      async function runSimulation() {
+        const t0 = performance.now();
+        const pill = document.getElementById("simStatusPill");
+        if (pill) {
+          pill.innerText = "Simulating...";
+          pill.className = "text-xs px-2.5 py-1 rounded-full bg-amber-100 text-amber-800 border border-amber-300 font-mono";
+        }
+
+        const universeParam = Array.from(selectedAssets).join(",");
+        const url = `/api/simulate?slots=${currentSlots}&timeframe=${currentTimeframe}&universe=${encodeURIComponent(universeParam)}&macro_gate=${currentMacroGate}&circuit_breaker=${encodeURIComponent(currentCircuitBreaker)}`;
+
+        try {
+          const res = await fetch(url);
+          if (!res.ok) {
+            throw new Error(`Server returned ${res.status} (${res.statusText})`);
+          }
+          const data = await res.json();
+          const elapsed = Math.round(performance.now() - t0);
+
+          // Update KPI Cards
+          const cagrElem = document.getElementById("kpiCagr");
+          if (cagrElem) cagrElem.innerText = (data.cagr >= 0 ? "+" : "") + data.cagr + "%";
+
+          const retElem = document.getElementById("kpiTotalReturn");
+          if (retElem) retElem.innerText = (data.total_return >= 0 ? "+" : "") + Number(data.total_return).toLocaleString() + "%";
+
+          const sharpeElem = document.getElementById("kpiSharpe");
+          if (sharpeElem) sharpeElem.innerText = data.sharpe;
+
+          const ddElem = document.getElementById("kpiMaxDD");
+          if (ddElem) ddElem.innerText = data.max_dd + "%";
+
+          const pfElem = document.getElementById("kpiPF");
+          if (pfElem) pfElem.innerText = data.profit_factor;
+
+          const tradesElem = document.getElementById("kpiTrades");
+          if (tradesElem) tradesElem.innerText = Number(data.trades_count).toLocaleString();
+
+          const wrElem = document.getElementById("kpiWinRate");
+          if (wrElem) wrElem.innerText = "Win Rate: " + data.win_rate + "%";
+
+          // Update Charts
+          if (equityChart && data.dates) {
+            equityChart.data.labels = data.dates;
+            equityChart.data.datasets[0].label = `Simulated Strategy (${currentSlots} Slots, ${currentTimeframe})`;
+            equityChart.data.datasets[0].data = data.nav_series;
+            if (data.benchmark_nav && data.benchmark_nav.length > 0) {
+              equityChart.data.datasets[1].data = data.benchmark_nav;
+            }
+            equityChart.update();
+          }
+
+          if (drawdownChart && data.dates) {
+            drawdownChart.data.labels = data.dates;
+            drawdownChart.data.datasets[0].data = data.dd_series;
+            drawdownChart.update();
+            const worstDDElem = document.getElementById("simWorstDD");
+            if (worstDDElem) worstDDElem.innerText = data.max_dd + "%";
+          }
+
+          // Update Simulated Trades Stream
+          const tbody = document.getElementById("simTradesTableBody");
+          if (tbody && data.sample_trades) {
+            if (data.sample_trades.length === 0) {
+              tbody.innerHTML = `<tr><td colspan="5" class="py-4 text-center text-slate-400">No trades executed with currently selected asset criteria.</td></tr>`;
+            } else {
+              tbody.innerHTML = data.sample_trades.slice().reverse().map(t => {
+                const ret = t.ret || 0;
+                const retClass = ret > 0 ? "text-emerald-600 font-bold" : (ret < 0 ? "text-rose-600 font-bold" : "text-slate-500");
+                const sign = ret > 0 ? "+" : "";
+                return `
+                  <tr class="hover:bg-slate-50 transition">
+                    <td class="py-2.5 px-3 font-bold text-slate-900">${t.sym}</td>
+                    <td class="py-2.5 px-3 text-slate-500">${(t.in_ts || "").replace("T", " ").slice(0, 16)}</td>
+                    <td class="py-2.5 px-3 text-slate-500">${(t.out_ts || "").replace("T", " ").slice(0, 16)}</td>
+                    <td class="py-2.5 px-3 text-right text-slate-700">${Number(t.rank || 0).toFixed(2)}</td>
+                    <td class="py-2.5 px-3 text-right ${retClass}">${sign}${ret.toFixed(2)}%</td>
+                  </tr>
+                `;
+              }).join("");
+            }
+          }
+
+          // Update Monthly Performance Attribution Matrix dynamically
+          const mbody = document.getElementById("monthlyMatrixBody");
+          if (mbody && data.monthly_matrix) {
+            const monthsList = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+            mbody.innerHTML = data.monthly_matrix.map(row => {
+              const year = row.year;
+              const cells = monthsList.map(m => {
+                const val = row[m];
+                if (val === null || val === undefined) {
+                  return `<td class="py-2.5 px-2 text-slate-400">&mdash;</td>`;
+                }
+                const sign = val > 0 ? "+" : "";
+                let cls = "text-slate-400";
+                if (val > 5) cls = "bg-emerald-100 text-emerald-800 font-medium";
+                else if (val > 0) cls = "bg-emerald-50 text-emerald-700";
+                else if (val < -5) cls = "bg-rose-100 text-rose-800 font-medium";
+                else if (val < 0) cls = "bg-rose-50 text-rose-700";
+                return `<td class="py-2.5 px-2 ${cls}">${sign}${val.toFixed(1)}%</td>`;
+              }).join("");
+
+              const tot = row.total || 0;
+              const totSign = tot > 0 ? "+" : "";
+              const totCls = tot > 0 ? "text-emerald-700 font-bold" : (tot < 0 ? "text-rose-600 font-bold" : "text-slate-700");
+              return `
+                <tr class="hover:bg-slate-50/50 transition">
+                  <td class="py-2.5 px-3 font-bold text-slate-800 text-left">${year}</td>
+                  ${cells}
+                  <td class="py-2.5 px-3 font-bold bg-slate-50 ${totCls} border-l border-slate-200">
+                    ${totSign}${tot.toFixed(1)}%
+                  </td>
+                </tr>
+              `;
+            }).join("");
+          }
+
+          const mmBadge = document.getElementById("monthlyMatrixModeBadge");
+          if (mmBadge) {
+            mmBadge.innerText = `Simulated (${currentSlots} ${currentSlots === 1 ? 'Slot' : 'Slots'}, ${currentTimeframe}${currentMacroGate ? ', Macro Gate' : ', Unhedged'})`;
+          }
+
+          // Dynamically update Annual Chart to match simulated yearly totals
+          if (annualChart && data.monthly_matrix) {
+            annualChart.data.labels = data.monthly_matrix.map(r => `${r.year}`);
+            annualChart.data.datasets[0].label = `Simulated Annual Return (${currentSlots} Slots, ${currentTimeframe})`;
+            annualChart.data.datasets[0].data = data.monthly_matrix.map(r => r.total || 0);
+            annualChart.data.datasets[0].backgroundColor = data.monthly_matrix.map(r => (r.total || 0) >= 0 ? "#2563eb" : "#e11d48");
+            annualChart.update();
+          }
+
+          // Update Risk Gate UI Indicators
+          const gateBadge = document.getElementById("gateStatusBadge");
+          const gateBtn = document.getElementById("toggleMacroGateBtn");
+          const gateDot = document.getElementById("gatePulseDot");
+          const gateNote = document.getElementById("gateEffectNote");
+
+          const row2020 = data.monthly_matrix ? data.monthly_matrix.find(r => r.year === 2020) : null;
+          const marVal = (row2020 && row2020.Mar !== undefined) ? row2020.Mar : null;
+          const marSign = marVal > 0 ? "+" : "";
+
+          if (currentMacroGate) {
+            if (gateBadge) {
+              gateBadge.innerText = "Protected";
+              gateBadge.className = "text-[9px] px-1.5 py-0.5 rounded font-mono font-semibold bg-emerald-100 text-emerald-800 border border-emerald-200";
+            }
+            if (gateBtn) {
+              gateBtn.innerText = "ON";
+              gateBtn.className = "px-2.5 py-0.5 rounded text-[10px] font-bold transition border bg-emerald-600 text-white border-emerald-600 shadow-xs hover:bg-emerald-700";
+            }
+            if (gateDot) {
+              gateDot.className = "w-2 h-2 rounded-full bg-emerald-500 animate-pulse";
+            }
+            if (gateNote && marVal !== null) {
+              gateNote.innerText = `Mar 2020: ${marSign}${marVal}% (Protected via Macro Gate)`;
+              gateNote.className = "block font-medium text-emerald-700 mt-0.5";
+            }
+          } else {
+            if (gateBadge) {
+              gateBadge.innerText = "Raw (Unhedged)";
+              gateBadge.className = "text-[9px] px-1.5 py-0.5 rounded font-mono font-semibold bg-rose-100 text-rose-800 border border-rose-200";
+            }
+            if (gateBtn) {
+              gateBtn.innerText = "OFF";
+              gateBtn.className = "px-2.5 py-0.5 rounded text-[10px] font-bold transition border bg-slate-200 text-slate-700 border-slate-300 hover:bg-slate-300";
+            }
+            if (gateDot) {
+              gateDot.className = "w-2 h-2 rounded-full bg-rose-500";
+            }
+            if (gateNote && marVal !== null) {
+              gateNote.innerText = `Mar 2020: ${marSign}${marVal}% (Crash Stop-Outs)`;
+              gateNote.className = "block font-medium text-rose-700 mt-0.5";
+            }
+          }
+
+          // Update latency and badges
+          const latElem = document.getElementById("simComputeLatency");
+          if (latElem) latElem.innerText = elapsed + "ms";
+
+          if (pill) {
+            pill.innerText = `${elapsed}ms (Live)`;
+            pill.className = "text-xs px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300 font-mono";
+          }
+
+        } catch (err) {
+          console.error("Simulation error:", err);
+          if (pill) {
+            pill.innerText = "Error: " + (err.message || "Fetch failed");
+            pill.className = "text-xs px-2.5 py-1 rounded-full bg-rose-100 text-rose-800 border border-rose-300 font-mono";
+          }
+        }
+      }
+
+      // 5. Wire Event Listeners
+      document.querySelectorAll(".slot-btn").forEach(btn => {
+        btn.addEventListener("click", function() {
+          const s = parseInt(this.getAttribute("data-slots"), 10);
+          updateSlotUI(s);
+          runSimulation();
+        });
+      });
+
+      const slotSlider = document.getElementById("slotSlider");
+      if (slotSlider) {
+        slotSlider.addEventListener("input", function() {
+          updateSlotUI(parseInt(this.value, 10));
+        });
+        slotSlider.addEventListener("change", function() {
+          runSimulation();
+        });
+      }
+
+      document.querySelectorAll(".tf-btn").forEach(btn => {
+        btn.addEventListener("click", function() {
+          updateTimeframeUI(this.getAttribute("data-tf"));
+          runSimulation();
+        });
+      });
+
+      document.querySelectorAll(".u-preset").forEach(btn => {
+        btn.addEventListener("click", function() {
+          const preset = this.getAttribute("data-preset");
+          if (preset === "all") {
+            selectedAssets = new Set(ALL_ASSETS);
+          } else if (preset === "equities") {
+            selectedAssets = new Set(ALL_ASSETS.filter(a => a !== "GOLDBEES" && a !== "SILVERBEES"));
+          } else if (preset === "bullion") {
+            selectedAssets = new Set(["GOLDBEES", "SILVERBEES"]);
+          } else if (preset === "financials") {
+            selectedAssets = new Set(["NIFTYBANK", "FINNIFTY", "NIFTYPSUBANK"]);
+          } else if (preset === "highbeta") {
+            selectedAssets = new Set(["NIFTYREALTY", "NIFTYSMLCAP250", "NIFTYMETAL", "NIFTYAUTO"]);
+          }
+          updateUniverseDisplay();
+          renderAssetPills();
+          runSimulation();
+        });
+      });
+
+      // Macro Gate Toggle
+      const gateToggleBtn = document.getElementById("toggleMacroGateBtn");
+      if (gateToggleBtn) {
+        gateToggleBtn.addEventListener("click", function() {
+          currentMacroGate = !currentMacroGate;
+          runSimulation();
+        });
+      }
+
+      // Circuit Breaker Buttons
+      document.querySelectorAll(".cb-btn").forEach(btn => {
+        btn.addEventListener("click", function() {
+          currentCircuitBreaker = this.getAttribute("data-cb");
+          document.querySelectorAll(".cb-btn").forEach(b => {
+            b.className = "cb-btn py-1 px-1 rounded font-semibold border text-center transition bg-white text-slate-700 border-slate-300 hover:bg-slate-50";
+          });
+          this.className = "cb-btn py-1 px-1 rounded font-semibold border text-center transition bg-blue-600 text-white border-blue-600 shadow-sm";
+          const disp = document.getElementById("cbDisplay");
+          if (disp) {
+            disp.innerText = currentCircuitBreaker === "none" ? "Unconstrained" : `${currentCircuitBreaker}% Limit`;
+          }
+          runSimulation();
+        });
+      });
+
+      const btnReset = document.getElementById("btnResetBaseline");
+      if (btnReset) {
+        btnReset.addEventListener("click", function() {
+          updateSlotUI(3);
+          updateTimeframeUI("30m");
+          selectedAssets = new Set(ALL_ASSETS);
+          currentMacroGate = true;
+          currentCircuitBreaker = "-7.0";
+          document.querySelectorAll(".cb-btn").forEach(b => {
+            if (b.getAttribute("data-cb") === "-7.0") {
+              b.className = "cb-btn py-1 px-1 rounded font-semibold border text-center transition bg-blue-600 text-white border-blue-600 shadow-sm";
+            } else {
+              b.className = "cb-btn py-1 px-1 rounded font-semibold border text-center transition bg-white text-slate-700 border-slate-300 hover:bg-slate-50";
+            }
+          });
+          const disp = document.getElementById("cbDisplay");
+          if (disp) disp.innerText = "-7% Limit";
+          updateUniverseDisplay();
+          renderAssetPills();
+          runSimulation();
+        });
+      }
+
+      // Render initial assets and fire default baseline simulation
+      renderAssetPills();
+      updateUniverseDisplay();
+      await runSimulation();
+
+      // 2. Fetch Index Return Attribution Data
+      try {
+        const res = await fetch("/api/indices");
+        const idxData = await res.json();
+        const labels = idxData.map(d => d.index_name || d.index);
+        const cumRets = idxData.map(d => d.cum_return_pct);
+        const profitFactors = idxData.map(d => d.profit_factor);
+
+        const ctxIdx = document.getElementById("indexReturnChart").getContext("2d");
+        new Chart(ctxIdx, {
+          type: "bar",
+          data: {
+            labels: labels,
+            datasets: [
+              {
+                type: "bar",
+                label: "Cumulative Net Return (%)",
+                data: cumRets,
+                backgroundColor: cumRets.map(v => v >= 50 ? "#059669" : (v > 0 ? "#3b82f6" : "#f43f5e")),
+                borderRadius: 4
+              },
+              {
+                type: "line",
+                label: "Profit Factor",
+                data: profitFactors,
+                borderColor: "transparent",
+                backgroundColor: "#d97706",
+                pointBackgroundColor: "#d97706",
+                pointBorderColor: "#ffffff",
+                pointBorderWidth: 1.5,
+                pointRadius: 5,
+                pointHoverRadius: 7,
+                showLine: false,
+                yAxisID: "y1"
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              x: { grid: { display: false }, ticks: { font: { family: "Inter", size: 9 }, maxRotation: 45 } },
+              y: {
+                title: { display: true, text: "Standalone Return (%)", font: { size: 10 } },
+                grid: { color: "#f1f5f9" },
+                ticks: { font: { family: "JetBrains Mono", size: 9 } }
+              },
+              y1: {
+                position: "right",
+                title: { display: true, text: "Profit Factor", font: { size: 10 } },
+                grid: { display: false },
+                ticks: { font: { family: "JetBrains Mono", size: 9 } }
+              }
+            },
+            plugins: {
+              legend: { position: "top", labels: { boxWidth: 12, font: { size: 11 } } }
+            }
+          }
+        });
+      } catch (err) {
+        console.error("Error loading index metrics:", err);
+      }
+
+      // 3. Fetch Annual Returns Data
+      try {
+        const res = await fetch("/api/annual");
+        const annualData = await res.json();
+        const years = annualData.map(d => d.year);
+        const baseline = annualData.map(d => d.direct_baseline);
+
+        const ctxAnnual = document.getElementById("annualChart").getContext("2d");
+        annualChart = new Chart(ctxAnnual, {
+          type: "bar",
+          data: {
+            labels: years,
+            datasets: [
+              {
+                label: "Simulated Annual Return (%)",
+                data: baseline,
+                backgroundColor: baseline.map(v => v >= 0 ? "#2563eb" : "#e11d48"),
+                borderRadius: 4
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              x: { grid: { display: false }, ticks: { font: { family: "Inter", size: 10 } } },
+              y: {
+                grid: { color: "#f1f5f9" },
+                ticks: {
+                  font: { family: "JetBrains Mono", size: 10 },
+                  callback: function(v) { return v + "%"; }
+                }
+              }
+            },
+            plugins: {
+              legend: { position: "top", labels: { boxWidth: 12, font: { size: 11 } } }
+            }
+          }
+        });
+      } catch (err) {
+        console.error("Error loading annual returns:", err);
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,44 @@
+[
+  {
+    "year": "2020",
+    "regime": "COVID Crash & Stimulus Rebound (Macro Gate Protected)",
+    "direct_baseline": 50.7,
+    "simulated_return": 50.7
+  },
+  {
+    "year": "2021",
+    "regime": "Broad Post-Pandemic Bull Expansion",
+    "direct_baseline": 92.4,
+    "simulated_return": 92.4
+  },
+  {
+    "year": "2022",
+    "regime": "Global Rate Hikes & Inflation Shock",
+    "direct_baseline": 30.8,
+    "simulated_return": 30.8
+  },
+  {
+    "year": "2023",
+    "regime": "Consolidation & Infrastructure Rotation",
+    "direct_baseline": 40.8,
+    "simulated_return": 40.8
+  },
+  {
+    "year": "2024",
+    "regime": "PSU Banking, Manufacturing & Capex Surge",
+    "direct_baseline": 42.0,
+    "simulated_return": 42.0
+  },
+  {
+    "year": "2025",
+    "regime": "High Dispersion Sector Momentum Breakouts",
+    "direct_baseline": 58.4,
+    "simulated_return": 58.4
+  },
+  {
+    "year": "2026",
+    "regime": "Tactical Momentum (Walk-Forward OOS YTD)",
+    "direct_baseline": 15.6,
+    "simulated_return": 15.6
+  }
+]

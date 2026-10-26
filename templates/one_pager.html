@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Strategy Explainer — Systematic Multi-Asset Momentum | Shubham Sinha</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;0,6..72,700;1,6..72,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #f8fafc;
+      color: #1e293b;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 11px;
+      line-height: 1.5;
+      padding: 28px 16px;
+      display: flex;
+      justify-content: center;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .document {
+      width: 100%;
+      max-width: 820px;
+      background: #ffffff;
+      padding: 36px 44px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+      border-radius: 4px;
+    }
+
+    /* Document Memo Header */
+    .memo-meta {
+      border-bottom: 2px solid #0f172a;
+      padding-bottom: 12px;
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+
+    .memo-tag {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #1e3a8a;
+      margin-bottom: 4px;
+    }
+
+    .doc-title {
+      font-family: 'Newsreader', Georgia, serif;
+      font-size: 23px;
+      font-weight: 700;
+      color: #0f172a;
+      letter-spacing: -0.3px;
+      line-height: 1.2;
+    }
+
+    .doc-subtitle {
+      font-size: 12px;
+      color: #475569;
+      margin-top: 3px;
+      font-weight: 500;
+    }
+
+    .author-block {
+      text-align: right;
+      font-size: 10.5px;
+      line-height: 1.4;
+      color: #334155;
+    }
+
+    .author-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .author-contacts a {
+      color: #1e3a8a;
+      text-decoration: none;
+    }
+
+    .author-contacts a:hover {
+      text-decoration: underline;
+    }
+
+    /* Executive Callout Box */
+    .executive-callout {
+      background: #f8fafc;
+      border-left: 3px solid #1e3a8a;
+      border-top: 1px solid #e2e8f0;
+      border-right: 1px solid #e2e8f0;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 10px 14px;
+      margin-bottom: 16px;
+      border-radius: 0 4px 4px 0;
+    }
+
+    .callout-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: #0f172a;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+
+    .callout-text {
+      font-size: 10.5px;
+      color: #334155;
+      line-height: 1.45;
+    }
+
+    /* Editorial Sections */
+    h2 {
+      font-family: 'Newsreader', Georgia, serif;
+      font-size: 14.5px;
+      font-weight: 700;
+      color: #0f172a;
+      margin-top: 14px;
+      margin-bottom: 6px;
+      padding-bottom: 3px;
+      border-bottom: 1px solid #e2e8f0;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+
+    .section-num {
+      font-family: 'Inter', sans-serif;
+      font-size: 10px;
+      font-weight: 600;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    p {
+      margin-bottom: 8px;
+      color: #334155;
+      font-size: 10.5px;
+      line-height: 1.5;
+    }
+
+    p strong {
+      color: #0f172a;
+    }
+
+    /* Structured Points */
+    .point-item {
+      margin-bottom: 8px;
+      padding-left: 14px;
+      position: relative;
+    }
+
+    .point-item::before {
+      content: '▪';
+      position: absolute;
+      left: 0;
+      color: #1e3a8a;
+      font-size: 13px;
+      top: -1px;
+    }
+
+    .point-title {
+      font-weight: 600;
+      color: #0f172a;
+      font-size: 10.5px;
+    }
+
+    .point-desc {
+      color: #475569;
+      font-size: 10px;
+      line-height: 1.4;
+    }
+
+    /* Enhanced Institutional Table */
+    .table-wrapper {
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      overflow: hidden;
+      margin: 10px 0 6px 0;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 9.5px;
+    }
+
+    thead th {
+      background: #edf2f7;
+      border-bottom: 2px solid #94a3b8;
+      padding: 6px 8px;
+      font-weight: 700;
+      color: #0f172a;
+      text-align: left;
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    tbody td {
+      padding: 5px 8px;
+      border-bottom: 1px solid #e2e8f0;
+      color: #334155;
+      background: #ffffff;
+    }
+
+    /* Enhanced Rows: Clean Light Grey Background */
+    .enhanced-row td {
+      background: #f1f5f9 !important;
+      color: #0f172a;
+    }
+
+    .highlight-row td {
+      background: #e2e8f0 !important;
+      font-weight: 700;
+      color: #0f172a !important;
+      border-top: 1.5px solid #94a3b8;
+      border-bottom: 1px solid #cbd5e1;
+    }
+
+    .highlight-row-alt td {
+      background: #dbe4ee !important;
+      font-weight: 700;
+      color: #0f172a !important;
+      border-top: 1px solid #cbd5e1;
+      border-bottom: 2px solid #475569;
+    }
+
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9.5px;
+    }
+
+    .text-right {
+      text-align: right;
+    }
+
+    .text-green {
+      color: #047857;
+      font-weight: 600;
+    }
+
+    /* Two Column Text Area */
+    .columns-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 6px;
+    }
+
+    /* Footer Note */
+    .memo-footer {
+      border-top: 1px solid #cbd5e1;
+      padding-top: 10px;
+      margin-top: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 9px;
+      color: #64748b;
+      line-height: 1.35;
+    }
+
+    .memo-footer-left {
+      max-width: 75%;
+    }
+
+    /* Strict A4 Printing */
+    .no-print {
+      display: flex;
+    }
+    @media print {
+      .no-print {
+        display: none !important;
+      }
+      body {
+        background: #ffffff;
+        padding: 0;
+      }
+      .document {
+        border: none;
+        box-shadow: none;
+        padding: 0;
+        max-width: 100%;
+      }
+      @page {
+        size: A4 portrait;
+        margin: 10mm 12mm;
+      }
+    }
+  </style>
+</head>
+<body style="flex-direction: column; align-items: center;">
+
+<div class="no-print" style="max-width: 820px; width: 100%; margin: 0 auto 12px auto; justify-content: space-between; align-items: center; padding: 8px 14px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 11px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+  <div style="font-weight: 600; color: #0f172a; display: flex; items-center; gap: 6px;">
+    <span>📄 Executive Strategy Explainer Memo</span>
+    <span style="color: #64748b; font-weight: normal;">(A4 Single-Page Format)</span>
+  </div>
+  <div style="display: flex; gap: 8px;">
+    <button onclick="window.print()" style="padding: 5px 12px; background: #0f172a; color: #ffffff; border: none; border-radius: 4px; font-size: 11px; font-weight: 600; cursor: pointer;">
+      🖨️ Print / Save as PDF (Ctrl + P)
+    </button>
+    <a href="/" style="padding: 5px 12px; background: #f1f5f9; color: #334155; text-decoration: none; border-radius: 4px; font-size: 11px; font-weight: 500; border: 1px solid #cbd5e1;">
+      &larr; Interactive Dashboard
+    </a>
+  </div>
+</div>
+
+<div class="document">
+
+  <!-- Document Header -->
+  <header class="memo-meta">
+    <div>
+      <div class="memo-tag">Quantitative Strategy Explainer & Analytical Dossier</div>
+      <h1 class="doc-title">Systematic Multi-Asset Momentum</h1>
+      <div class="doc-subtitle">A Regime-Adaptive Trend & Sector Rotation Framework for Indian Markets</div>
+    </div>
+    <div class="author-block">
+      <div class="author-name">SHUBHAM SINHA</div>
+      <div>Investment Analyst | Portfolio Analytics & Quantitative Research</div>
+      <div class="author-contacts">
+        <a href="mailto:shubhamme1107@gmail.com">shubhamme1107@gmail.com</a> • +91 7982949029<br>
+        <a href="https://www.linkedin.com/in/shubham-sinha-7a3285300" target="_blank">LinkedIn</a> • 
+        <a href="https://github.com/shubhamsinha1107" target="_blank">GitHub</a> • New Delhi
+      </div>
+    </div>
+  </header>
+
+  <!-- Executive Summary Callout -->
+  <div class="executive-callout">
+    <div class="callout-title">The Strategy in 60 Seconds</div>
+    <div class="callout-text">
+      This strategy is an <strong>institutional-grade, multi-asset quantitative framework</strong> spanning Indian equities, sectoral indices, and precious metals. Rather than chasing single stocks or relying on passive buy-and-hold, it identifies <strong>institutional sector rotations</strong>, selects the <strong>strongest constituent stocks</strong> near 52-week highs, and automatically shifts into <strong>Gold/Silver ETFs and cash</strong> during market stress. Over a 6.8-year historical backtest (2020–2026), the simulated model delivered a <strong>45.1% (Direct Index Baseline) to 73.0% (Multi-Asset Basket) CAGR</strong> while holding maximum drawdown to just <strong>-7.1% to -10.2%</strong>, achieving positive simulated returns in all 7 calendar years. Live execution on personal and firm-allocated capital is utilized to validate real-world execution, fill quality, and latency.
+    </div>
+  </div>
+
+  <!-- Section 1: The Problem & The Solution -->
+  <h2>
+    <span>1. The Problem with Retail Momentum & How We Solve It</span>
+    <span class="section-num">Strategy Thesis</span>
+  </h2>
+  <p>
+    Standard equity momentum strategies in emerging markets suffer from severe drawdown spikes (often -30% to -45%) during sudden market rotations, interest rate shifts, and choppy consolidation regimes. This framework resolves these vulnerabilities through three structural design principles:
+  </p>
+  <div class="point-item">
+    <div class="point-title">Lead-Lag Sector Discovery (Top-Down Alpha)</div>
+    <div class="point-desc">Institutional capital in India enters broad industry sectors (Autos, Realty, PSU Banks, Metals, Energy) days before individual retail stocks react. By tracking trend inflection points on 30m and 60m intraday bars, the system enters emerging trends early with high statistical probability.</div>
+  </div>
+  <div class="point-item">
+    <div class="point-title">Multi-Asset Shock Absorbers (Equities + Physical Gold & Silver ETFs)</div>
+    <div class="point-desc">Equities do not operate in isolation. When market-wide equity momentum breaks down, capital automatically routes to Physical Gold (GOLDBEES) and Silver (SILVERBEES) ETFs and liquid cash, turning risk-off equity selloffs into uncorrelated crisis alpha.</div>
+  </div>
+  <div class="point-item">
+    <div class="point-title">The Multi-Sleeve Diversification Dividend</div>
+    <div class="point-desc">Single-horizon strategies suffer deep peak-to-trough drawdowns (-13.6% to -23.3%). Mathematically combining complementary sleeves—fast tactical momentum (30m) with core trend (60m) and defensive hedging—compresses portfolio drawdown to just <strong>-7.1% to -10.2%</strong>.</div>
+  </div>
+
+  <!-- Section 2: Strategy Architecture -->
+  <h2>
+    <span>2. Three Operating Sleeves: How Capital is Allocated</span>
+    <span class="section-num">Architecture</span>
+  </h2>
+  <p>
+    The master portfolio is split into three disciplined, rules-driven capital sleeves:
+  </p>
+  <div class="point-item">
+    <div class="point-title">Sleeve 1: Rapid Sector Momentum (50% AUM | 30-min Horizon)</div>
+    <div class="point-desc">Captures fast-moving rotational swings across cyclical sectors and precious metals. Uses an adaptive volatility trail to enter confirmed breakouts, filtered by a 40-day trend efficiency gate (Kaufman Efficiency Ratio ≥ 0.20) that deliberately prevents trading in noisy, sideways markets.</div>
+  </div>
+  <div class="point-item">
+    <div class="point-title">Sleeve 2: Enhanced Core Trend (25% AUM | 60-min Horizon)</div>
+    <div class="point-desc">Captures sustained multi-week institutional trends. Rather than equal weighting, constituent stocks are sized using <strong>inverse-volatility risk parity</strong> (allocating more capital to lower-volatility leaders), ensuring volatile smallcaps do not disproportionately drive portfolio risk.</div>
+  </div>
+  <div class="point-item">
+    <div class="point-title">Sleeve 3: Multi-Asset Crash Hedge (25% AUM | 60-min Horizon)</div>
+    <div class="point-desc">Monitors mid/smallcap quality champions alongside Gold and Silver ETFs. When equity breadth breaks down, defensive assets activate automatically, dampening overall portfolio volatility.</div>
+  </div>
+
+  <!-- Section 3: Empirical Track Record Table -->
+  <h2>
+    <span>3. Backtest Performance Attribution (2020 – 2026 Simulation)</span>
+    <span class="section-num">Simulated Model Results</span>
+  </h2>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Strategy Component</th>
+          <th>Horizon</th>
+          <th class="text-right">Trades</th>
+          <th class="text-right">Win Rate</th>
+          <th class="text-right">Avg Trade</th>
+          <th class="text-right">CAGR</th>
+          <th class="text-right">Max DD</th>
+          <th class="text-right">Sharpe</th>
+          <th class="text-right">Calmar</th>
+          <th class="text-right">Profit Factor</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Sleeve 1: Rapid Sector Momentum (Direct Index Baseline)</td>
+          <td>30m</td>
+          <td class="text-right mono">291</td>
+          <td class="text-right mono">46.4%</td>
+          <td class="text-right mono">+0.98%</td>
+          <td class="text-right mono">53.1%</td>
+          <td class="text-right mono">-13.6%</td>
+          <td class="text-right mono">1.76</td>
+          <td class="text-right mono">3.91</td>
+          <td class="text-right mono">2.36</td>
+        </tr>
+        <tr class="enhanced-row">
+          <td>&nbsp;&nbsp;↳ Enhanced Stock Proxies (Top 4 Constituent Alpha)</td>
+          <td>30m</td>
+          <td class="text-right mono">291</td>
+          <td class="text-right mono">51.2%</td>
+          <td class="text-right mono">+1.54%</td>
+          <td class="text-right mono">94.7%</td>
+          <td class="text-right mono">-12.0%</td>
+          <td class="text-right mono">2.23</td>
+          <td class="text-right mono">7.90</td>
+          <td class="text-right mono">3.20</td>
+        </tr>
+        <tr>
+          <td>Sleeve 2: Core Trend (Direct Index Baseline)</td>
+          <td>60m</td>
+          <td class="text-right mono">148</td>
+          <td class="text-right mono">45.9%</td>
+          <td class="text-right mono">+1.59%</td>
+          <td class="text-right mono">40.1%</td>
+          <td class="text-right mono">-23.3%</td>
+          <td class="text-right mono">1.32</td>
+          <td class="text-right mono">1.72</td>
+          <td class="text-right mono">2.38</td>
+        </tr>
+        <tr class="enhanced-row">
+          <td>&nbsp;&nbsp;↳ Enhanced Stock Proxies (Risk-Parity Constituent Alpha)</td>
+          <td>60m</td>
+          <td class="text-right mono">148</td>
+          <td class="text-right mono">48.0%</td>
+          <td class="text-right mono">+1.95%</td>
+          <td class="text-right mono">50.8%</td>
+          <td class="text-right mono">-19.1%</td>
+          <td class="text-right mono">1.41</td>
+          <td class="text-right mono">2.66</td>
+          <td class="text-right mono">2.51</td>
+        </tr>
+        <tr>
+          <td>Sleeve 3: Crash Hedge (Direct Index / Gold & Silver ETFs)</td>
+          <td>60m</td>
+          <td class="text-right mono">122</td>
+          <td class="text-right mono">55.7%</td>
+          <td class="text-right mono">+1.59%</td>
+          <td class="text-right mono">34.0%</td>
+          <td class="text-right mono text-green">-8.4%</td>
+          <td class="text-right mono">1.60</td>
+          <td class="text-right mono">4.06</td>
+          <td class="text-right mono">3.25</td>
+        </tr>
+        <tr class="highlight-row">
+          <td><strong>★ MASTER MULTI-SLEEVE (Direct Index Baseline)</strong></td>
+          <td>Multi</td>
+          <td class="text-right mono">561</td>
+          <td class="text-right mono">48.6%</td>
+          <td class="text-right mono">+1.28%</td>
+          <td class="text-right mono"><strong>45.1%</strong></td>
+          <td class="text-right mono text-green"><strong>-7.1%</strong></td>
+          <td class="text-right mono"><strong>1.85</strong></td>
+          <td class="text-right mono"><strong>6.31</strong></td>
+          <td class="text-right mono"><strong>2.59</strong></td>
+        </tr>
+        <tr class="highlight-row-alt">
+          <td><strong>★ MASTER MULTI-SLEEVE (Enhanced Stock Proxies — Constituent Alpha)</strong></td>
+          <td>Multi</td>
+          <td class="text-right mono">561</td>
+          <td class="text-right mono">51.5%</td>
+          <td class="text-right mono">+1.84%</td>
+          <td class="text-right mono text-green"><strong>73.0%</strong></td>
+          <td class="text-right mono"><strong>-10.2%</strong></td>
+          <td class="text-right mono"><strong>2.16</strong></td>
+          <td class="text-right mono"><strong>7.16</strong></td>
+          <td class="text-right mono"><strong>3.04</strong></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div style="font-size: 8.5px; color: #64748b; margin: 4px 0 14px 0; line-height: 1.35;">
+    * <strong>Methodology & Asset Universe Note:</strong> Figures reflect simulated backtests (2020–2026) with modeled 15–20 bps round-trip friction and Point-In-Time constituents. The universe is <strong>Multi-Asset</strong>: when an equity sector triggers, the model buys top constituent equities; when precious metals trigger, it holds Gold (GOLDBEES) or Silver (SILVERBEES) ETFs directly. Direct Index Baseline (45.1% CAGR / -7.1% Max DD) reflects pure macro sector timing; Multi-Asset Basket (73.0% CAGR / -10.2% Max DD) incorporates constituent equity selection. Real-time market impact and liquidity moderation apply in live execution.
+  </div>
+
+  <!-- Section 4: Analytical Rigor & Execution -->
+  <div class="columns-2">
+    <div>
+      <h2>
+        <span>4. Why the Backtest is Real</span>
+        <span class="section-num">Anti-Overfitting</span>
+      </h2>
+      <div class="point-item">
+        <div class="point-title">Point-In-Time (PIT) Index Mapping</div>
+        <div class="point-desc">Constituent universes are synced to historical semi-annual NSE index changes (Mar/Sep), completely eliminating survivorship and look-ahead bias.</div>
+      </div>
+      <div class="point-item">
+        <div class="point-title">Parameter Stability (No Knife-Edge Tuning)</div>
+        <div class="point-desc">Testing constituent basket sizes from 1 to 10 stocks demonstrates a broad, stable Sharpe plateau (2.45 to 2.63) rather than relying on a fragile, overfitted single parameter.</div>
+      </div>
+      <div class="point-item">
+        <div class="point-title">Realistic Transaction Drag Modeled</div>
+        <div class="point-desc">Tested under 15–20 bps round-trip friction (STT, exchange turnover, stamp duty, slippage). Frictional drag consumes only ~10%–12% of gross trade expectancy.</div>
+      </div>
+    </div>
+
+    <div>
+      <h2>
+        <span>5. Production Engineering</span>
+        <span class="section-num">Implementation</span>
+      </h2>
+      <div class="point-item">
+        <div class="point-title">Live Deployment on Personal & Firm-Allocated Capital</div>
+        <div class="point-desc">Live broker integration using Fyers REST API and Zerodha Kite Connect for real-time execution on personal capital, alongside monitoring across firm-allocated portfolios to verify fill quality, latency, and slippage against model prices.</div>
+      </div>
+      <div class="point-item">
+        <div class="point-title">Automated 15-Minute Pipeline</div>
+        <div class="point-desc">Scheduler runs 10 seconds post candle close, updating indicators via Numba-accelerated loops in under 4.5 seconds.</div>
+      </div>
+      <div class="point-item">
+        <div class="point-title">Pre-Trade Risk & Kill Switches</div>
+        <div class="point-desc">Enforces market hours (09:15–15:25 IST), single-order value caps, daily turnover guardrails, and instant emergency kill switches.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 5: Author Profile -->
+  <h2>
+    <span>6. About the Strategist: Institutional Grounding</span>
+    <span class="section-num">Candidate Profile</span>
+  </h2>
+  <p style="margin-bottom: 4px;">
+    <strong>Shubham Sinha</strong> is an Investment Analyst at a Promoter Single Family Office & Industrial Conglomerate in New Delhi. His systematic strategy design is directly informed by managing real-world institutional capital:
+  </p>
+  <div class="columns-2" style="margin-top: 0;">
+    <div class="point-item">
+      <div class="point-title">INR 400+ Cr Portfolio Oversight</div>
+      <div class="point-desc">Central risk monitoring and tactical execution across equities, mutual funds, bullion, and unlisted shares. Prioritizes drawdown dampening over unhedged beta.</div>
+    </div>
+    <div class="point-item">
+      <div class="point-title">INR 150+ Cr Mutual Fund Allocation</div>
+      <div class="point-desc">Leads scheme selection and buy/switch strategy with promoter approval. Migrated INR 50+ Cr to direct plans, generating recurring savings of <strong>~INR 29L/year</strong>.</div>
+    </div>
+    <div class="point-item">
+      <div class="point-title">30,000+ Trade Data Automation</div>
+      <div class="point-desc">Engineered in-house FIFO capital gains engines and AIS tax matching tools reconciling 20,000+ records, saving 250+ hours of manual work.</div>
+    </div>
+    <div class="point-item">
+      <div class="point-title">MBA in Data Science (2026)</div>
+      <div class="point-desc">Academic foundation combining financial analytics, time-series forecasting, and machine learning (XGBoost/LSTM momentum anomaly research). B.Com DU (2023).</div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="memo-footer">
+    <div class="memo-footer-left">
+      <strong>Confidential Strategy Explainer.</strong> Sourced from 6+ years of tick and constituent database (2020–2026). Proprietary mathematical weights and algorithmic code withheld; complete architectural schema and trade logs available for institutional review.
+    </div>
+    <div style="text-align: right; font-family: 'JetBrains Mono', monospace; font-size: 8.5px; color: #0f172a; font-weight: 600;">
+      Prepared by Shubham Sinha<br>
+      New Delhi, India
+    </div>
+  </footer>
+
+</div>
+
+<script>
+  if (window.location.search.includes("print=1")) {
+    window.onload = function() {
+      setTimeout(function() { window.print(); }, 350);
+    };
+  }
+</script>
+</body>
+</html>
