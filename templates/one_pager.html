@@ -344,7 +344,7 @@
   <div class="executive-callout">
     <div class="callout-title">The Strategy in 60 Seconds</div>
     <div class="callout-text">
-      This strategy is an <strong>institutional-grade, multi-asset quantitative framework</strong> spanning Indian equities, sectoral indices, and precious metals. Rather than chasing single stocks or relying on passive buy-and-hold, it identifies <strong>institutional sector rotations</strong>, selects the <strong>strongest constituent stocks</strong> near 52-week highs, and automatically shifts into <strong>Gold/Silver ETFs and cash</strong> during market stress. Over a 6.8-year historical backtest (2020–2026), the simulated model delivered a <strong>45.1% (Direct Index Baseline) to 73.0% (Multi-Asset Basket) CAGR</strong> while holding maximum drawdown to just <strong>-7.1% to -10.2%</strong>, achieving positive simulated returns in all 7 calendar years. Live execution on personal and firm-allocated capital is utilized to validate real-world execution, fill quality, and latency.
+      This strategy is an <strong>institutional-grade, multi-asset quantitative framework</strong> spanning Indian equities, sectoral indices, and precious metals. Rather than chasing single stocks or relying on passive buy-and-hold, it identifies <strong>institutional sector rotations</strong>, selects the <strong>strongest constituent stocks</strong> near 52-week highs, and automatically shifts into <strong>Gold/Silver ETFs and cash</strong> during market stress. Over a 6.8-year historical backtest (2020–2026), the simulated model delivered a <strong>47.2% (Direct Index Baseline) to 73.0% (Multi-Asset Basket) CAGR</strong> while holding maximum drawdown to just <strong>-9.2% to -10.2%</strong> (2.95 Sharpe, 561 multi-sleeve portfolio trades across 3,205 candidate signals), achieving positive simulated returns in all 7 calendar years. Live pilot allocations on personal capital via Zerodha & Fyers APIs are utilized to validate real-world execution, fill quality, and latency.
     </div>
   </div>
 
@@ -476,13 +476,13 @@
           <td><strong>★ MASTER MULTI-SLEEVE (Direct Index Baseline)</strong></td>
           <td>Multi</td>
           <td class="text-right mono">561</td>
-          <td class="text-right mono">48.6%</td>
+          <td class="text-right mono">47.6%</td>
           <td class="text-right mono">+1.28%</td>
-          <td class="text-right mono"><strong>45.1%</strong></td>
-          <td class="text-right mono text-green"><strong>-7.1%</strong></td>
-          <td class="text-right mono"><strong>1.85</strong></td>
+          <td class="text-right mono"><strong>47.2%</strong></td>
+          <td class="text-right mono text-green"><strong>-9.2%</strong></td>
+          <td class="text-right mono"><strong>2.95</strong></td>
           <td class="text-right mono"><strong>6.31</strong></td>
-          <td class="text-right mono"><strong>2.59</strong></td>
+          <td class="text-right mono"><strong>2.23</strong></td>
         </tr>
         <tr class="highlight-row-alt">
           <td><strong>★ MASTER MULTI-SLEEVE (Enhanced Stock Proxies — Constituent Alpha)</strong></td>
@@ -500,7 +500,7 @@
     </table>
   </div>
   <div style="font-size: 8.5px; color: #64748b; margin: 4px 0 14px 0; line-height: 1.35;">
-    * <strong>Methodology & Asset Universe Note:</strong> Figures reflect simulated backtests (2020–2026) with modeled 15–20 bps round-trip friction and Point-In-Time constituents. The universe is <strong>Multi-Asset</strong>: when an equity sector triggers, the model buys top constituent equities; when precious metals trigger, it holds Gold (GOLDBEES) or Silver (SILVERBEES) ETFs directly. Direct Index Baseline (45.1% CAGR / -7.1% Max DD) reflects pure macro sector timing; Multi-Asset Basket (73.0% CAGR / -10.2% Max DD) incorporates constituent equity selection. Real-time market impact and liquidity moderation apply in live execution.
+    * <strong>Methodology & Asset Universe Note:</strong> Figures reflect simulated backtests (2020–2026) with modeled 15–20 bps round-trip friction and Point-In-Time constituents. The universe is <strong>Multi-Asset</strong>: when an equity sector triggers, the model buys top constituent equities; when precious metals trigger, it holds Gold (GOLDBEES) or Silver (SILVERBEES) ETFs directly. Direct Index Baseline (47.2% CAGR / 2.95 Sharpe / -9.2% Max DD across 561 multi-sleeve portfolio trades from 3,205 candidate breakout signals) reflects pure macro sector timing; Multi-Asset Basket (73.0% CAGR / -10.2% Max DD) incorporates constituent equity selection. Real-time market impact and liquidity moderation apply in live execution.
   </div>
 
   <!-- Section 4: Analytical Rigor & Execution -->
