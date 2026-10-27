@@ -46,7 +46,7 @@ def startup_event():
 # Web Page Endpoints
 # ---------------------------------------------------------
 
-@app.get("/", response_class=HTMLResponse)
+@app.api_route("/", methods=["GET", "HEAD"], response_class=HTMLResponse)
 async def home_dashboard(request: Request):
     """Main institutional interactive dashboard."""
     metrics = db.get_summary_metrics()
@@ -76,12 +76,12 @@ async def home_dashboard(request: Request):
         }
     )
 
-@app.get("/explainer", response_class=HTMLResponse)
+@app.api_route("/explainer", methods=["GET", "HEAD"], response_class=HTMLResponse)
 async def strategy_explainer(request: Request):
     """Institutional Strategy One-Pager memo (print-ready A4)."""
     return render_template("one_pager.html", request)
 
-@app.get("/trades", response_class=HTMLResponse)
+@app.api_route("/trades", methods=["GET", "HEAD"], response_class=HTMLResponse)
 async def trade_explorer(
     request: Request,
     index: Optional[str] = Query(None),
@@ -206,7 +206,7 @@ async def api_simulate_post(payload: Dict[str, Any]):
     )
     return JSONResponse(content=res)
 
-@app.get("/health")
+@app.api_route("/health", methods=["GET", "HEAD"])
 async def health_check():
     """Healthcheck endpoint for Render / Uptime monitors."""
     return {"status": "healthy", "service": "quant-momentum-showcase", "version": "1.0.0"}
