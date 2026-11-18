@@ -78,6 +78,15 @@ class TestShowcase(unittest.TestCase):
             for k in ("cagr", "max_dd", "sharpe", "trades"):
                 self.assertAlmostEqual(r[k], s[k], delta=0.051, msg=f"{s['id']} {k}")
 
+    def test_cv_snapshot_still_reproducible(self):
+        """The frozen CV figures must still come out of the current code and data (catches silent drift)."""
+        snap = db.get_cv_snapshot()
+        if not snap or self.meta["cutoff"] < snap["end"]:
+            self.skipTest("no CV snapshot / data does not reach it")
+        r = db.simulate_portfolio(end=snap["end"])
+        for k in ("cagr", "max_dd", "sharpe", "trades", "win_rate", "profit_factor"):
+            self.assertAlmostEqual(r[k], snap["strategy"][k], delta=0.051, msg=k)
+
     def test_fast(self):
         t0 = time.time()
         for _ in range(5):

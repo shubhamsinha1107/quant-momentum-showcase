@@ -35,6 +35,7 @@ def _base() -> Dict[str, Any]:
     return {
         **PROFILE,
         "meta": db.get_meta(),
+        "cv": db.get_cv_snapshot(),
         "master": next((m for m in metrics if m.get("type") == "master"), {}),
         "sleeves": [m for m in metrics if m.get("type") == "sleeve"],
     }

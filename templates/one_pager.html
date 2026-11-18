@@ -60,6 +60,18 @@
     <div class="kpi"><span>Beta to Nifty</span><b class="mono">{{ master.beta }}</b><i>{{ master.trades }} trades, {{ master.win_rate }}% won</i></div>
   </div>
 
+  {% if cv %}
+  <h2>{{ cv.label }} (fixed period {{ cv.start }} to {{ cv.end }})</h2>
+  <table>
+    <tr><th>Period</th><th>CAGR</th><th>Max DD</th><th>Sharpe</th><th>Trades</th><th>Without Silver</th><th>Nifty 50</th></tr>
+    <tr><td>{{ cv.start }} to {{ cv.end }}</td><td class="mono">{{ "%+.1f"|format(cv.strategy.cagr) }}%</td><td class="mono">{{ cv.strategy.max_dd }}%</td>
+      <td class="mono">{{ cv.strategy.sharpe }}</td><td class="mono">{{ cv.strategy.trades }}</td>
+      <td class="mono">{{ "%+.1f"|format(cv.without_silver.cagr) }}% / {{ cv.without_silver.max_dd }}%</td>
+      <td class="mono">{{ "%+.1f"|format(cv.benchmark.cagr) }}% / {{ cv.benchmark.max_dd }}%</td></tr>
+  </table>
+  <p style="margin:4px 0 0;color:var(--sub)">Frozen; these figures don't change. The headline numbers above run to {{ meta.cutoff }} and keep moving.</p>
+  {% endif %}
+
   <h2>The idea</h2>
   <p style="margin:0">{{ sleeves|length }} rule-based strategies each hold at most one NSE index or metal ETF at a time, picked by recent risk-adjusted momentum on 30- or 60-minute bars and exited when that edge fades. A market-wide risk-off filter keeps them in cash in stress. Capital is split across the strategies and rebalanced monthly. No leverage, no shorting, no single stocks.</p>
 

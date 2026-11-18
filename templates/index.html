@@ -49,6 +49,35 @@
     </div>
   </div>
 
+  {% if cv %}
+  <div class="bg-white border-b border-slate-200">
+    <div class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <div class="rounded-xl border-2 border-blue-200 bg-blue-50/50 p-4">
+        <div class="flex flex-wrap items-baseline justify-between gap-2">
+          <h3 class="text-sm font-bold text-slate-900">{{ cv.label }} &middot; fixed period {{ cv.start }} to {{ cv.end }}</h3>
+          <span class="text-[10px] px-2 py-0.5 rounded bg-white border border-blue-200 text-blue-800 font-semibold">Frozen &middot; these numbers don't change</span>
+        </div>
+        {% set cs = cv.strategy %}{% set cb = cv.benchmark %}{% set cx = cv.without_silver %}
+        <div class="mt-3 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 mono">
+          {% for label, val, sub in [('CAGR', "%+.1f"|format(cs.cagr) ~ '%', 'Nifty ' ~ ("%+.1f"|format(cb.cagr)) ~ '%'),
+                                     ('Max drawdown', cs.max_dd ~ '%', 'Nifty ' ~ cb.max_dd ~ '%'),
+                                     ('Sharpe', cs.sharpe, 'Nifty ' ~ cb.sharpe),
+                                     ('Without Silver', "%+.1f"|format(cx.cagr) ~ '%', 'max DD ' ~ cx.max_dd ~ '%'),
+                                     ('Closed trades', cs.trades, 'win rate ' ~ cs.win_rate ~ '%'),
+                                     ('Profit factor', cs.profit_factor, 'avg trade ' ~ ("%+.2f"|format(cs.avg_trade_pct)) ~ '%')] %}
+          <div class="bg-white rounded-lg border border-blue-100 p-2.5">
+            <p class="text-[10px] font-sans font-semibold text-slate-500 uppercase tracking-wider">{{ label }}</p>
+            <p class="text-base font-bold text-slate-900">{{ val }}</p>
+            <p class="text-[10px] text-slate-400">{{ sub }}</p>
+          </div>
+          {% endfor %}
+        </div>
+        <p class="mt-2 text-[11px] text-slate-600">{{ cv.definition }} The live figures below run to {{ meta.cutoff }} and keep moving as new months are published.</p>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
   <div class="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white border-b border-slate-700">
     <div class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-5 flex flex-col md:flex-row md:items-center justify-between gap-6">
       <div>

@@ -35,6 +35,19 @@ def _load(name: str, default: Any) -> Any:
     return data
 
 
+REPO_DATA = Path(__file__).resolve().parent / "data"
+
+
+def get_cv_snapshot() -> Dict[str, Any]:
+    """Fixed-period figures quoted on the CV (data/cv_snapshot.json, frozen by tools/make_cv_snapshot.py)."""
+    p = REPO_DATA / "cv_snapshot.json"
+    try:
+        with open(p, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except (OSError, ValueError):
+        return {}
+
+
 def get_meta() -> Dict[str, Any]:
     return _load("meta", {})
 
@@ -150,7 +163,8 @@ def _calendar(dates: List[str], eq: List[float], bench: List[float]):
 
 # ── simulator ────────────────────────────────────────────────────────────────
 def simulate_portfolio(strategies: Optional[List[str]] = None, universe: Optional[List[str]] = None,
-                       cost_rt_pct: Optional[float] = None, monthly_stop: Optional[float] = None) -> Dict[str, Any]:
+                       cost_rt_pct: Optional[float] = None, monthly_stop: Optional[float] = None,
+                       end: Optional[str] = None) -> Dict[str, Any]:
     """
     Re-runs the published model on its own trades with your choices:
       strategies    which strategies to include (their weights are rescaled to 100%)
@@ -160,12 +174,24 @@ def simulate_portfolio(strategies: Optional[List[str]] = None, universe: Optiona
       monthly_stop  e.g. -5: once the portfolio is down 5% or more for the calendar month at a day's
                     close, no new trades open for the rest of that month (open trades run to their exit).
                     Uses only closes up to the day before an entry, so there is no look-ahead.
+      end           "YYYY-MM-DD": stop the run at that date (open trades are valued at that day's close
+                    and don't count as closed trades), e.g. for a fixed period quoted elsewhere.
     Equity is marked to market daily and rebalanced to the target weights each month, exactly as the
     exporter does, so the default settings reproduce the published numbers.
     """
     sim, meta = _sim_data(), get_meta()
     if not sim:
         return {"error": "no data exported yet"}
+    if end:
+        n = sum(1 for d in sim["dates"] if d <= end)
+        if n < 2:
+            return {"error": "end date is before the data starts"}
+        cut = []
+        for si, sym, closed_exit, path in sim["trades"]:
+            p = [x for x in path if x[0] < n]
+            if p:
+                cut.append([si, sym, closed_exit if len(p) == len(path) else 0, p])
+        sim = {**sim, "dates": sim["dates"][:n], "benchmark": sim["benchmark"][:n], "trades": cut}
     dates, bench = sim["dates"], sim["benchmark"]
     sl = sim["sleeves"]
     ids = [s["id"] for s in sl]
@@ -274,6 +300,6 @@ def simulate_portfolio(strategies: Optional[List[str]] = None, universe: Optiona
         "dd_series": [round(dd_series[i] * 100, 2) for i in pts],
         "monthly_matrix": monthly, "annual": annual,
         "recent_trades": rows[-15:][::-1],
-        "cutoff": meta.get("cutoff"),
+        "cutoff": dates[-1],
     })
     return out

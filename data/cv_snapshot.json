@@ -1,0 +1,86 @@
+{
+  "label": "Figures quoted on my CV",
+  "start": "2020-01-01",
+  "end": "2026-09-30",
+  "frozen_on": "2026-11-19",
+  "definition": "Backtest, index-level (NSE indices + Gold/Silver ETFs, no single stocks), net of 0.20% round-trip cost, before tax; rules fixed 2024-12-31.",
+  "strategy": {
+    "total_return": 1472.4,
+    "cagr": 50.4,
+    "max_dd": -13.3,
+    "volatility": 16.3,
+    "sharpe": 2.62,
+    "sortino": 4.54,
+    "calmar": 3.79,
+    "trades": 774,
+    "win_rate": 48.1,
+    "avg_trade_pct": 1.44,
+    "profit_factor": 2.77,
+    "exposure_pct": 93.8
+  },
+  "benchmark": {
+    "name": "Nifty 50 (price index)",
+    "total_return": 85.6,
+    "cagr": 9.6,
+    "max_dd": -38.2,
+    "volatility": 17.6,
+    "sharpe": 0.62,
+    "sortino": 0.84,
+    "calmar": 0.25
+  },
+  "without_silver": {
+    "cagr": 34.8,
+    "max_dd": -12.9,
+    "sharpe": 2.3,
+    "total_return": 651.4
+  },
+  "without_metals": {
+    "cagr": 27.7,
+    "max_dd": -10.4,
+    "sharpe": 2.12,
+    "total_return": 419.8
+  },
+  "annual": [
+    {
+      "year": "2020",
+      "strategy": 62.3,
+      "benchmark": 14.6
+    },
+    {
+      "year": "2021",
+      "strategy": 52.4,
+      "benchmark": 24.3
+    },
+    {
+      "year": "2022",
+      "strategy": 17.1,
+      "benchmark": 4.3
+    },
+    {
+      "year": "2023",
+      "strategy": 31.4,
+      "benchmark": 19.9
+    },
+    {
+      "year": "2024",
+      "strategy": 35.7,
+      "benchmark": 8.9
+    },
+    {
+      "year": "2025",
+      "strategy": 145.4,
+      "benchmark": 10.4
+    },
+    {
+      "year": "2026",
+      "strategy": 24.1,
+      "benchmark": -13.5
+    }
+  ],
+  "weights": {
+    "Rapid Sector Momentum": 28.6,
+    "Midcap Satellite": 14.3,
+    "Core Sector Momentum": 28.6,
+    "Multi-Asset Hedge": 28.6
+  }
+}
