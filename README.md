@@ -10,7 +10,7 @@ A research and performance portal for a **rule-based intraday-signal momentum st
 
 Researched and engineered by **[Shubham Sinha](https://www.linkedin.com/in/shubham-sinha-7a3285300)** (*Investment Analyst | Portfolio Analytics & Quantitative Research*).
 
-**Live site:** https://quant.80-225-254-110.sslip.io/
+**Live site:** https://quant.137-23-35-244.sslip.io/
 
 ---
 
@@ -28,7 +28,7 @@ Researched and engineered by **[Shubham Sinha](https://www.linkedin.com/in/shubh
 
 ## 📊 Results snapshot (1 Jan 2020 – 19 Oct 2026)
 
-*These figures are a snapshot taken when this README was written; the [live site](https://quant.80-225-254-110.sslip.io/) is always current. All returns are net of a **0.20% round-trip cost** per trade. Positions, including trades still open, are marked at each day's close. Sharpe and Sortino use daily returns × √252 with a risk-free rate of 0.*
+*These figures are a snapshot taken when this README was written; the [live site](https://quant.137-23-35-244.sslip.io/) is always current. All returns are net of a **0.20% round-trip cost** per trade. Positions, including trades still open, are marked at each day's close. Sharpe and Sortino use daily returns × √252 with a risk-free rate of 0.*
 
 | Metric | Combined portfolio | Nifty 50 (price index) |
 | :--- | ---: | ---: |
