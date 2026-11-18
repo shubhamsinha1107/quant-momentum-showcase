@@ -1,154 +1,172 @@
-# 📈 Systematic Multi-Asset Sector Momentum Strategy Showcase
+# 📈 Sector Index Momentum Strategy Showcase
 
 [![Quant Strategy Audit & CI](https://github.com/shubhamsinha1107/quant-momentum-showcase/actions/workflows/ci.yml/badge.svg)](https://github.com/shubhamsinha1107/quant-momentum-showcase/actions)
 [![Python](https://img.shields.io/badge/Python-3.11%2B-blue.svg)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.110%2B-009688.svg)](https://fastapi.tiangolo.com/)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Neon%20Serverless-336791.svg)](https://neon.tech/)
 [![Docker](https://img.shields.io/badge/Docker-Ready-2496ED.svg)](https://www.docker.com/)
 [![License: Source-Available](https://img.shields.io/badge/License-Source--Available%20%7C%20Showcase%20Only-red.svg)](LICENSE)
 
-An institutional quantitative research and performance attribution portal showcasing a **Multi-Horizon Systematic Momentum & Macro Volatility Strategy** across major **NSE Sector Indices and Precious Metals ETFs** (2020–2026).
+A research and performance portal for a **rule-based intraday-signal momentum strategy** that trades whole **NSE sector and broad indices plus Gold and Silver ETFs**: no single stocks.
 
 Researched and engineered by **[Shubham Sinha](https://www.linkedin.com/in/shubham-sinha-7a3285300)** (*Investment Analyst | Portfolio Analytics & Quantitative Research*).
 
-[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy)
+**Live site:** https://quant.80-225-254-110.sslip.io/
 
 ---
 
-## 🏛️ Open-Core Architecture & Quant Rigor
+## What this repository shows
 
-> ⚠️ **Portfolio Showcase Edition**: This repository is designed to showcase quantitative research methodology, macro sector momentum, empirical performance attribution, and full-stack software architecture.
-> 
-> To eliminate single-stock idiosyncratic drag and minimize data payload, this showcase executes on the **direct main sector indices and multi-asset ETFs** (with 1,012 executed fills prioritized from 3,205 candidate breakout signals over 6.8 years). Live broker execution credentials (Fyers/Zerodha API keys) and proprietary real-time order routing code are withheld. All backtest time-series, NAV equity curves, and trade execution logs reflect verified empirical engine outputs net of **15–20 bps round-trip transaction costs (STT, exchange fees, stamp duty, slippage)**.
+> ⚠️ **Showcase edition.** The numbers come from the same strategy code that runs a live paper-trading bot, applied **directly to the index / ETF price series** (30-minute bars). No proxy stocks are used. Broker credentials, order routing and the signal code itself are not in this repository.
+>
+> **Published with a 30-day delay.** The site is refreshed every trading evening but only shows data up to 30 days ago, so trades that closed in the last month appear later.
 
----
-
-## 🎯 Executive Strategy Summary
-
-Retail momentum strategies in emerging markets typically suffer deep peak-to-trough drawdowns (-30% to -45%) during sudden regime shifts, consolidation chop, or rate-hike cycles. This framework resolves these vulnerabilities through three structural design principles:
-
-1. **Lead-Lag Top-Down Sector Discovery**: Institutional capital flows into broad sectors (Autos, Realty, PSU Banks, Metals, Energy, IT) before individual stocks react. Trading confirmed trend breakouts across 30m and 60m timeframes yields high statistical expectancy.
-2. **Multi-Asset Crisis Alpha**: Equities do not operate in isolation. When market-wide equity momentum deteriorates, capital systematically reallocates into **Physical Gold (`GOLDBEES`) and Silver (`SILVERBEES`) ETFs** alongside liquid cash, dampening overall portfolio volatility.
-3. **Macro Volatility Regime Gate & Monthly Loss Circuit Breaker**: During extreme panic crashes (such as March 2020 COVID crash), equity breakout attempts are suppressed into cash/gold, turning March 2020 positive (**+2.4%**) and capping master portfolio maximum drawdown to **-9.2%** (versus **-38.4%** for the Nifty 50 benchmark).
+- **4 strategies**, each holding **at most one index or ETF at a time**, chosen by recent risk-adjusted momentum on 30- or 60-minute bars, and exited when that edge fades.
+- A **market-wide risk-off filter** keeps them in cash during stress.
+- Capital is split across the strategies at fixed weights and **rebalanced monthly**. No leverage, no shorting.
 
 ---
 
-## 📊 Empirical Performance Summary (2020 – 2026 Walk-Forward)
+## 📊 Results snapshot (1 Jan 2020 – 19 Oct 2026)
 
-*Simulated results net of 15–20 bps round-trip transaction friction, execution slippage, cash equity (1.0x, zero leverage):*
+*These figures are a snapshot taken when this README was written; the [live site](https://quant.80-225-254-110.sslip.io/) is always current. All returns are net of a **0.20% round-trip cost** per trade. Positions, including trades still open, are marked at each day's close. Sharpe and Sortino use daily returns × √252 with a risk-free rate of 0.*
 
-| Metric | Master Multi-Slot Strategy (3 Slots, 30m) | Benchmark (Nifty 50 TR) | Quant Edge |
-| :--- | :---: | :---: | :--- |
-| **CAGR (Annualized)** | **+47.2%** | +15.2% | **+32.0% Alpha** |
-| **Total Net Return** | **+1,288.2% (13.88x)** | +139.9% (2.40x) | **+1,148.3% Outperformance** |
-| **Sharpe Ratio** | **2.95** | 0.88 | **Institutional Risk-Adjusted Quality** |
-| **Sortino Ratio** | **4.18** | 1.12 | **Superior Downside Protection** |
-| **Max Peak-to-Trough Drawdown** | **-9.2%** | **-38.4%** | **-29.2% Drawdown Compression** |
-| **Calmar Ratio** | **5.13** | 0.40 | **12.8x Better Calmar** |
-| **Market Beta vs Nifty 50** | **0.38** | 1.00 | **Low Market Beta Exposure** |
-| **Time in Market (Exposure)** | **64.2%** | 100% | **Cash/Gold during Panic Drawdowns** |
-| **Annual Portfolio Turnover** | **~148 cycles/year** | Buy & Hold | **~12 trades/month across 15 assets** |
+| Metric | Combined portfolio | Nifty 50 (price index) |
+| :--- | ---: | ---: |
+| CAGR | **+49.7%** | +9.7% |
+| Total return | **+1,450%** | +88% |
+| Max drawdown | **−13.3%** | −38.2% |
+| Volatility (annualised) | 16.3% | 17.6% |
+| Sharpe | **2.60** | 0.62 |
+| Sortino | 4.49 | 0.85 |
+| Calmar | 3.73 | 0.25 |
+| Beta to Nifty 50 | 0.25 | 1.00 |
+| Days with a position | 93.8% | 100% |
+| Closed trades / win rate | 781 / 47.9% | |
+| Profit factor / average trade | 2.75 / +1.42% | |
+
+### Calendar years
+
+The rules were developed on 2020–2024 and fixed on **31 Dec 2024**, so 2025 onward is out of sample.
+
+| Year | Strategy | Nifty 50 | Max DD in year | Trades closed | Sample |
+| :--- | ---: | ---: | ---: | ---: | :--- |
+| 2020 | +62.3% | +14.6% | −8.1% | 104 | In sample |
+| 2021 | +52.4% | +24.3% | −8.1% | 139 | In sample |
+| 2022 | +17.1% | +4.3% | −12.7% | 95 | In sample |
+| 2023 | +31.4% | +19.9% | −9.2% | 119 | In sample |
+| 2024 | +35.7% | +8.9% | −6.7% | 133 | In sample |
+| 2025 | +145.4% | +10.4% | −4.1% | 89 | Out of sample |
+| 2026 (to 19 Oct) | +22.3% | −12.4% | −11.7% | 102 | Out of sample |
+
+**About 2025:** most of the gain came from the Silver ETF (SILVERBEES rose from about ₹150 to ₹223 in Nov–Dec 2025), and three strategies held it at the same time. Strategies are allowed to hold the same asset at once, so concentration can be high.
+
+### Strategies (each run alone with 100% of capital)
+
+| Strategy | Signals | Portfolio weight | Trades | Win | CAGR | Max DD | Sharpe | Profit factor |
+| :--- | :---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| Rapid Sector Momentum | 30-min | 28.6% | 294 | 46.9% | +68.4% | −26.4% | 2.46 | 2.64 |
+| Midcap Satellite | 30-min | 14.3% | 176 | 49.4% | +23.7% | −11.6% | 2.04 | 2.54 |
+| Core Sector Momentum | 60-min | 28.6% | 170 | 44.7% | +46.6% | −26.4% | 1.83 | 2.53 |
+| Multi-Asset Hedge | 60-min | 28.6% | 141 | 51.8% | +44.4% | −16.2% | 2.07 | 3.56 |
+
+### By index / ETF
+
+*"Contribution" is the sum of each trade's net return × its strategy's weight, in % of capital (not compounded).*
+
+| Index / ETF | Trades | Win | Avg trade | Contribution | Profit factor |
+| :--- | ---: | ---: | ---: | ---: | ---: |
+| Silver ETF (SILVERBEES) | 76 | 52.6% | +3.79% | +82.2% | 5.40 |
+| Gold ETF (GOLDBEES) | 109 | 52.3% | +1.23% | +38.5% | 2.63 |
+| Nifty Realty | 52 | 40.4% | +1.83% | +27.1% | 2.53 |
+| Nifty Midcap 50 | 126 | 51.6% | +0.98% | +26.4% | 2.58 |
+| Nifty PSU Bank | 67 | 43.3% | +1.36% | +26.0% | 2.19 |
+| Nifty Smallcap 50 | 129 | 47.3% | +1.05% | +25.8% | 2.78 |
+| Nifty Metal | 62 | 37.1% | +1.36% | +24.1% | 2.19 |
+| Nifty India Defence | 16 | 62.5% | +3.17% | +14.5% | 5.38 |
+| Nifty Healthcare | 28 | 64.3% | +1.62% | +13.0% | 6.37 |
+| Nifty IT | 23 | 39.1% | +1.34% | +8.8% | 2.65 |
+| Nifty Bank | 16 | 56.2% | +1.08% | +4.9% | 1.87 |
+| Nifty Auto | 28 | 46.4% | +0.58% | +4.6% | 1.79 |
+| Nifty Financial Services | 8 | 62.5% | +1.28% | +2.9% | 3.82 |
+| Nifty Capital Markets | 3 | 66.7% | +0.67% | +0.6% | 1.78 |
+| Nifty Energy | 38 | 31.6% | −0.39% | −4.3% | 0.60 |
 
 ---
 
-## 🏆 Sector Index & ETF Attribution Breakdown
+## ⚠️ Limits — read before quoting these numbers
 
-*Distinguishing standalone single-asset compounding (100% capital) vs realized portfolio P&L contribution under concurrent multi-slot execution:*
-
-| Sector Index / ETF | Candidate Signals | Portfolio Fills | Win Rate | Standalone Return (100% Asset) | Portfolio P&L Contribution | Profit Factor |
-| :--- | :---: | :---: | :---: | :---: | :---: | :---: |
-| **NIFTY REALTY** | 240 | 60 | 49.6% | **+956.1%** | **+34.0%** | **2.16** |
-| **NIFTY SMALLCAP 250** | 253 | 92 | 51.8% | **+855.4%** | **+34.8%** | **2.51** |
-| **NIFTY MIDCAP 150** | 261 | 92 | 51.0% | **+578.1%** | **+17.4%** | **2.43** |
-| **SILVERBEES (Silver ETF)** | 164 | 67 | 47.0% | **+509.3%** | **+37.2%** | **2.52** |
-| **NIFTY METAL** | 259 | 74 | 42.9% | **+482.0%** | **+6.2%** | **1.82** |
-| **NIFTY PSU BANK** | 252 | 68 | 44.4% | **+409.9%** | **+21.0%** | **1.70** |
-| **NIFTY ENERGY** | 251 | 64 | 49.4% | **+387.4%** | **+10.7%** | **2.07** |
-| **NIFTY AUTO** | 257 | 91 | 46.3% | **+296.2%** | **+11.7%** | **1.80** |
-| **GOLDBEES (Gold ETF)** | 187 | 83 | 46.5% | **+215.5%** | **+18.7%** | **2.23** |
-| **FINNIFTY** | 264 | 69 | 42.8% | **+149.7%** | **+16.8%** | **1.57** |
-| **NIFTY IT** | 265 | 95 | 42.3% | **+137.6%** | **+26.8%** | **1.50** |
-| **NIFTY BANK** | 272 | 77 | 39.3% | **+115.5%** | **+24.4%** | **1.44** |
-| **NIFTY HEALTHCARE** | 159 | 50 | 40.9% | **+78.1%** | **+1.3%** | **1.70** |
-| **NIFTY CAPITAL MKT** | 61 | 16 | 36.1% | **+50.4%** | **+1.8%** | **1.99** |
-| **NIFTY DEFENCE** | 60 | 14 | 41.7% | **+39.2%** | **+6.5%** | **1.75** |
+- **A model, not broker fills.** Results come from index prices at bar closes. They are not audited or broker-reported returns.
+- **Indices can't be bought directly.** In practice you would use an ETF or futures, which adds tracking error and different costs.
+- **In-sample years.** 2020–2024 are the years the rules were built on. Only 2025 onward is out of sample.
+- **Not the full live bot.** The live bot also runs a monthly stock-basket rotation strategy. It is left out here because it isn't index-level, so these numbers differ from the bot's own model.
+- **Not a prediction.** Past results don't predict future returns. This is not investment advice.
 
 ---
 
-## 🖥️ Interactive Showcase Features
+## 🖥️ Site features
 
-- **Interactive Strategy Lab & Multi-Slot Simulator**: Visitors can dynamically adjust concurrent portfolio slots ($N \in [1..15]$), toggle signal horizons (`30m` vs `60m`), toggle the **Macro Crash Gate (ON/OFF)**, and select monthly risk limits (`-7%`, `-10%`, or unconstrained). Dynamic backtests execute in **< 15 ms** on pre-computed cross-sectional Sharpe ranks.
-- **Dynamic Monthly Attribution Matrix**: Directly placed below the KPI strip; recalculates and color-codes monthly gains/losses dynamically on parameter changes.
-- **Dynamic NAV Equity Curve**: Interactive Chart.js time-series comparing simulated portfolio allocation against the Nifty 50 Total Return Benchmark with default logarithmic scaling and regime annotations.
-- **Underwater Drawdown Visualization**: Visual proof of capital preservation during the March 2020 COVID crash and 2022 inflation corrections.
-- **Per-Asset Signal Generation & Attribution Table**: Clear breakdown distinguishing standalone single-asset compounding from portfolio P&L contributions.
-- **Full Trade Execution Log (`/trades`)**: Filterable ledger (3,205 unfiltered candidate trade events) displaying discrete Buy & Sell signals, holding periods, and net returns by index.
-- **Printable Strategy Explainer Memo (`/explainer?print=1`)**: Editorial research dossier with automatic print-to-PDF formatting.
-- **Programmatic Simulation REST API**: `GET /api/simulate`, `POST /api/simulate`, and `GET /api/candidates` for automated quantitative research and integration.
+- **Strategy Lab:** re-runs the published trades with your choices:
+  - which strategies to include (weights rescaled to 100%)
+  - which indices may be traded
+  - cost per round trip
+  - a monthly loss stop
 
----
-
-## ⚡ Tech Stack & Architecture
-
-- **Backend**: Python 3.11+, FastAPI, Uvicorn, Pydantic
-- **Database**: [Neon Serverless Postgres](https://neon.tech/) with zero-config fallback to embedded SQLite
-- **Frontend**: Tailwind CSS (CDN), Chart.js, HTML5/Jinja2 Templates
-- **Containerization**: Lightweight multi-stage Docker container
-- **Hosting**: 1-click deployment on [Render.com](https://render.com/)
+  At default settings it reproduces the published numbers exactly. The loss stop uses only past closes, so there is no look-ahead. A trade in an index you switch off is skipped and that strategy stays in cash; it does not swap in another index.
+- **Daily-marked equity curve and drawdown** vs Nifty 50, plus a monthly return matrix.
+- **Calendar-year chart** with the out-of-sample years marked, and **contribution by index**.
+- **Trade log (`/trades`):** every closed trade, filterable by index and strategy.
+- **Printable memo (`/explainer`):** a one-page A4 summary.
+- **JSON API:**
+  - `/api/meta`, `/api/summary`, `/api/indices`, `/api/annual`, `/api/monthly`, `/api/equity`, `/api/trades`
+  - `GET|POST /api/simulate` (`strategies`, `universe`, `cost`, `monthly_stop`)
+  - `/health` (reports the data cut-off date)
 
 ---
 
-## 🚀 Quickstart & Local Setup
+## ⚡ How it fits together
 
-### 1. Clone & Install Dependencies
+```
+trading bot (Docker)  ──►  exporter/run_export.sh  (weekdays 18:30 IST, cron)
+  strategy code, 30m index data      │  1. Nifty 50 daily closes from the market database (benchmark)
+                                     │  2. exporter/export_model.py inside the bot container:
+                                     │       backtest each strategy on the indices themselves,
+                                     │       mark daily, combine, apply the 30-day cut-off
+                                     ▼  3. exporter/split_bundle.py → data/live/*.json
+showcase (FastAPI, this repo) reads data/live/*.json (mounted read-only); nothing is hard-coded
+```
+
+- **Backend:** Python 3.11, FastAPI, Uvicorn, Jinja2 (`db.py` reads the exported JSON and runs the simulator)
+- **Frontend:** Tailwind CSS, Chart.js
+- **Deploy:** Docker Compose (`compose.prod.yml`) behind a Caddy reverse proxy
+
+---
+
+## 🚀 Run locally
+
 ```bash
 git clone https://github.com/shubhamsinha1107/quant-momentum-showcase.git
 cd quant-momentum-showcase
-
-python -m venv venv
-# On Windows:
-venv\Scripts\activate
-# On Linux/macOS:
-source venv/bin/activate
-
+python -m venv venv && source venv/bin/activate      # Windows: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-### 2. Run Test Suite
+The app needs the exported files in `data/live/`; they are produced by the exporter and are not committed. Point it at a copy with `QS_DATA_DIR`:
+
 ```bash
-python -m unittest discover -s tests -p "test_*.py"
+QS_DATA_DIR=/path/to/live python -m unittest discover -s tests -v   # checks the simulator reproduces the export
+QS_DATA_DIR=/path/to/live python main.py                              # http://localhost:8000
 ```
 
-### 3. Run Application
-```bash
-python main.py
-```
-Visit `http://localhost:8000` in your web browser.
+Without data, the tests are skipped and `/health` reports `no-data`.
 
 ---
 
-## 🌐 Deploy to Render.com with Neon Serverless Postgres
+## 👤 About the author
 
-1. **Create Free Database on Neon**:
-   - Go to [neon.tech](https://neon.tech/) and create a free PostgreSQL project.
-   - Copy the `Pooled connection` string (e.g., `postgresql://...`).
-2. **Deploy to Render**:
-   - Link your GitHub repository to a new **Web Service** on Render.
-   - In Environment Settings, add:
-     - `DATABASE_URL`: Your Neon Postgres pooled connection string.
-     - `PORT`: `8000`
-   - Render builds the Docker container and launches the service. On boot, `seed_db.py` automatically initializes your Neon database.
-3. **Prevent Cold Starts**:
-   - Configure a free health check monitor (e.g., [UptimeRobot](https://uptimerobot.com/)) pinging `https://<your-render-app>.onrender.com/health` every 10 minutes.
+**Shubham Sinha**
+*Investment Analyst | Portfolio Analytics & Quantitative Research*
+New Delhi, India
 
----
-
-## 👤 About the Author
-
-**Shubham Sinha**  
-*Investment Analyst | Portfolio Analytics & Quantitative Research*  
-New Delhi, India  
-
-- **LinkedIn**: [https://www.linkedin.com/in/shubham-sinha-7a3285300](https://www.linkedin.com/in/shubham-sinha-7a3285300)  
-- **GitHub**: [https://github.com/shubhamsinha1107](https://github.com/shubhamsinha1107)  
-- **Institutional Background**: Manages portfolio risk and quantitative analytics across an INR 400+ Cr single family office & conglomerate portfolio (equities, mutual funds, precious metals, and unlisted holdings).
+- **LinkedIn:** [https://www.linkedin.com/in/shubham-sinha-7a3285300](https://www.linkedin.com/in/shubham-sinha-7a3285300)
+- **GitHub:** [https://github.com/shubhamsinha1107](https://github.com/shubhamsinha1107)
+- **Background:** manages portfolio risk and quantitative analytics across an INR 400+ Cr single family office & conglomerate portfolio (equities, mutual funds, precious metals, and unlisted holdings).

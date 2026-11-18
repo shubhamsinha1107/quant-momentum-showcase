@@ -1,217 +1,171 @@
 """
-main.py - Institutional Quantitative Strategy Showcase
-Interactive Backtesting & Research Portal (Main Sector Indices & ETFs)
+main.py - Quant strategy showcase (index-level, published with a delay).
+Every number on the pages comes from the exporter's files (see db.py); nothing is typed into the templates.
 """
 import os
 from pathlib import Path
-from typing import Optional, Dict, Any
-from fastapi import FastAPI, Request, Query
+from typing import Any, Dict, List, Optional
+
+from fastapi import FastAPI, Query, Request
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
 import db
-import seed_db
 
 BASE_DIR = Path(__file__).resolve().parent
 STATIC_DIR = BASE_DIR / "static"
 TEMPLATES_DIR = BASE_DIR / "templates"
 
-app = FastAPI(
-    title="Quantitative Multi-Asset Sector Momentum Strategy Showcase",
-    description="Empirical backtesting and risk analytics portal for major NSE sector indices & multi-asset ETFs.",
-    version="1.0.0"
-)
-
+app = FastAPI(title="Sector Index Momentum - Strategy Showcase", version="2.0.0")
 if STATIC_DIR.exists():
     app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
-
 templates = Jinja2Templates(directory=str(TEMPLATES_DIR))
 
-def render_template(template_name: str, request: Request, context: Optional[Dict[str, Any]] = None):
-    """Template renderer for Starlette/FastAPI."""
-    ctx = context.copy() if context else {}
-    ctx["request"] = request
-    return templates.TemplateResponse(request=request, name=template_name, context=ctx)
+PROFILE = {
+    "github_url": "https://github.com/shubhamsinha1107",
+    "linkedin_url": "https://www.linkedin.com/in/shubham-sinha-7a3285300",
+    "author_name": "Shubham Sinha",
+    "author_title": "Investment Analyst | Portfolio Analytics & Quantitative Research",
+}
 
-@app.on_event("startup")
-def startup_event():
-    """Ensure database schema is created and seeded on boot."""
-    try:
-        seed_db.run_seed()
-    except Exception as e:
-        print(f"[STARTUP] Notice during seed: {e}")
 
-# ---------------------------------------------------------
-# Web Page Endpoints
-# ---------------------------------------------------------
+def _base() -> Dict[str, Any]:
+    metrics = db.get_summary_metrics()
+    return {
+        **PROFILE,
+        "meta": db.get_meta(),
+        "master": next((m for m in metrics if m.get("type") == "master"), {}),
+        "sleeves": [m for m in metrics if m.get("type") == "sleeve"],
+    }
+
+
+NO_DATA = """<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Strategy Showcase</title></head><body style="font-family:system-ui,sans-serif;max-width:560px;margin:15vh auto;padding:0 16px;color:#1e293b">
+<h1 style="font-size:20px">Data not available yet</h1><p>This copy of the showcase has no exported results. The numbers are produced by the
+exporter (exporter/run_export.sh) and are not stored in the repository.</p></body></html>"""
+
+
+def render(name: str, request: Request, ctx: Dict[str, Any]):
+    if not ctx.get("meta"):
+        return HTMLResponse(NO_DATA, status_code=503)
+    return templates.TemplateResponse(request=request, name=name, context={**ctx, "request": request})
+
 
 @app.api_route("/", methods=["GET", "HEAD"], response_class=HTMLResponse)
-async def home_dashboard(request: Request):
-    """Main institutional interactive dashboard."""
-    metrics = db.get_summary_metrics()
-    index_metrics = db.get_index_metrics()
-    annual = db.get_annual_returns()
-    monthly = db.get_monthly_matrix()
-    sample_trades, total_trades = db.get_trades(limit=15)
-    
-    master = next((m for m in metrics if m.get("type") == "master"), {})
-    sleeves = [m for m in metrics if m.get("type") == "sleeve"]
+async def home(request: Request):
+    ctx = _base()
+    recent, total = db.get_trades(limit=15)
+    ctx.update({
+        "index_metrics": db.get_index_metrics(),
+        "annual": db.get_annual_returns(),
+        "monthly": db.get_monthly_matrix(),
+        "sample_trades": recent,
+        "total_trades": total,
+        "universe": db.get_universe(),
+    })
+    return render("index.html", request, ctx)
 
-    return render_template(
-        "index.html",
-        request,
-        {
-            "master": master,
-            "sleeves": sleeves,
-            "index_metrics": index_metrics,
-            "annual": annual,
-            "monthly": monthly,
-            "sample_trades": sample_trades,
-            "total_trades": total_trades,
-            "github_url": "https://github.com/shubhamsinha1107",
-            "linkedin_url": "https://www.linkedin.com/in/shubham-sinha-7a3285300",
-            "author_name": "Shubham Sinha",
-            "author_title": "Investment Analyst | Portfolio Analytics & Quantitative Research"
-        }
-    )
 
 @app.api_route("/explainer", methods=["GET", "HEAD"], response_class=HTMLResponse)
-async def strategy_explainer(request: Request):
-    """Institutional Strategy One-Pager memo (print-ready A4)."""
-    return render_template("one_pager.html", request)
+async def explainer(request: Request):
+    ctx = _base()
+    ctx.update({"annual": db.get_annual_returns(), "index_metrics": db.get_index_metrics()})
+    return render("one_pager.html", request, ctx)
+
 
 @app.api_route("/trades", methods=["GET", "HEAD"], response_class=HTMLResponse)
-async def trade_explorer(
-    request: Request,
-    index: Optional[str] = Query(None),
-    sleeve: Optional[str] = Query(None),
-    page: int = Query(1, ge=1),
-    page_size: int = Query(50, ge=10, le=200)
-):
-    """Full-featured paginated trade log explorer."""
-    offset = (page - 1) * page_size
-    trades, total = db.get_trades(limit=page_size, offset=offset, index_sym=index, sleeve=sleeve)
-    total_pages = max(1, (total + page_size - 1) // page_size)
-    index_list = db.get_index_metrics()
-    
-    return render_template(
-        "trades.html",
-        request,
-        {
-            "trades": trades,
-            "total": total,
-            "page": page,
-            "page_size": page_size,
-            "total_pages": total_pages,
-            "selected_index": index or "",
-            "selected_sleeve": sleeve or "",
-            "indices": [im.get("index_name") or im.get("index") for im in index_list]
-        }
-    )
+async def trade_explorer(request: Request, index: Optional[str] = Query(None), sleeve: Optional[str] = Query(None),
+                         page: int = Query(1, ge=1), page_size: int = Query(50, ge=10, le=200)):
+    trades, total = db.get_trades(limit=page_size, offset=(page - 1) * page_size, index_sym=index, sleeve=sleeve)
+    ctx = _base()
+    ctx.update({
+        "trades": trades, "total": total, "page": page, "page_size": page_size,
+        "total_pages": max(1, (total + page_size - 1) // page_size),
+        "selected_index": index or "", "selected_sleeve": sleeve or "",
+        "indices": [u["name"] for u in db.get_universe()],
+    })
+    return render("trades.html", request, ctx)
 
-# ---------------------------------------------------------
-# JSON API Endpoints (For Chart.js & External Evaluation)
-# ---------------------------------------------------------
+
+# ── JSON API ────────────────────────────────────────────────────────────────
+@app.get("/api/meta")
+async def api_meta():
+    return JSONResponse(db.get_meta())
+
 
 @app.get("/api/equity")
-async def api_equity_series():
-    """Returns weekly NAV time series for Master Portfolio, Benchmark, and Drawdowns."""
-    return JSONResponse(content=db.get_equity_series())
+async def api_equity():
+    return JSONResponse(db.get_equity_series())
+
 
 @app.get("/api/summary")
-async def api_summary_metrics():
-    """Returns high-level summary metrics across sleeves."""
-    return JSONResponse(content=db.get_summary_metrics())
+async def api_summary():
+    return JSONResponse(db.get_summary_metrics())
+
 
 @app.get("/api/indices")
-async def api_indices_metrics():
-    """Returns index-by-index breakdown metrics."""
-    return JSONResponse(content=db.get_index_metrics())
+async def api_indices():
+    return JSONResponse(db.get_index_metrics())
+
 
 @app.get("/api/annual")
-async def api_annual_returns():
-    """Returns annual returns by market regime."""
-    return JSONResponse(content=db.get_annual_returns())
+async def api_annual():
+    return JSONResponse(db.get_annual_returns())
+
 
 @app.get("/api/monthly")
-async def api_monthly_matrix():
-    """Returns monthly return matrix (Jan-Dec + Total) from 2020 to 2026."""
-    return JSONResponse(content=db.get_monthly_matrix())
+async def api_monthly():
+    return JSONResponse(db.get_monthly_matrix())
+
 
 @app.get("/api/trades")
-async def api_trades(
-    index: Optional[str] = None,
-    sleeve: Optional[str] = None,
-    limit: int = 50,
-    offset: int = 0
-):
-    """Paginated trade records."""
+async def api_trades(index: Optional[str] = None, sleeve: Optional[str] = None,
+                     limit: int = Query(50, ge=1, le=1000), offset: int = Query(0, ge=0)):
     trades, total = db.get_trades(limit=limit, offset=offset, index_sym=index, sleeve=sleeve)
-    return JSONResponse(content={"total": total, "trades": trades, "limit": limit, "offset": offset})
+    return JSONResponse({"total": total, "trades": trades, "limit": limit, "offset": offset})
 
-@app.get("/api/candidates")
-async def api_candidates(timeframe: str = "30m"):
-    """Returns complete unfiltered ranked candidate trade events for a timeframe."""
-    cands = db.get_ranked_candidates(timeframe)
-    return JSONResponse(content={"timeframe": timeframe, "total": len(cands), "candidates": cands})
+
+def _list(v: Any) -> Optional[List[str]]:
+    if v is None:
+        return None
+    if isinstance(v, str):
+        v = v.split(",")
+    out = [str(x).strip() for x in v if str(x).strip()]
+    return out or None
+
+
+def _num(v: Any) -> Optional[float]:
+    if v is None or str(v).strip().lower() in ("", "none", "off", "null"):
+        return None
+    try:
+        return float(v)
+    except (TypeError, ValueError):
+        return None
+
 
 @app.get("/api/simulate")
-async def api_simulate_get(
-    slots: int = Query(3, ge=1, le=15),
-    timeframe: str = Query("30m"),
-    universe: Optional[str] = Query(None),
-    macro_gate: bool = Query(True),
-    circuit_breaker: Optional[str] = Query("-7.0")
-):
-    """Fast simulation endpoint via GET parameters."""
-    u_list = [u.strip().upper() for u in universe.split(",") if u.strip()] if universe else None
-    cb_val = None
-    if circuit_breaker and circuit_breaker.strip() and circuit_breaker.lower() not in ("none", "null", "off", "0"):
-        try:
-            cb_val = float(circuit_breaker)
-        except Exception:
-            cb_val = -7.0
-    res = db.simulate_portfolio(
-        max_slots=slots,
-        timeframe=timeframe,
-        universe=u_list,
-        macro_gate=macro_gate,
-        circuit_breaker=cb_val
-    )
-    return JSONResponse(content=res)
+async def api_simulate_get(strategies: Optional[str] = None, universe: Optional[str] = None,
+                           cost: Optional[str] = None, monthly_stop: Optional[str] = None):
+    u = _list(universe)
+    return JSONResponse(db.simulate_portfolio(_list(strategies), [x.upper() for x in u] if u else None,
+                                              _num(cost), _num(monthly_stop)))
+
 
 @app.post("/api/simulate")
 async def api_simulate_post(payload: Dict[str, Any]):
-    """Fast simulation endpoint via POST JSON payload."""
-    slots = int(payload.get("slots", 3))
-    timeframe = str(payload.get("timeframe", "30m"))
-    universe = payload.get("universe", None)
-    if isinstance(universe, str):
-        universe = [u.strip().upper() for u in universe.split(",") if u.strip()]
-    macro_gate = bool(payload.get("macro_gate", True))
-    cb = payload.get("circuit_breaker", "-7.0")
-    cb_val = None
-    if cb and str(cb).strip() and str(cb).lower() not in ("none", "null", "off", "0"):
-        try:
-            cb_val = float(cb)
-        except Exception:
-            cb_val = -7.0
-    res = db.simulate_portfolio(
-        max_slots=slots,
-        timeframe=timeframe,
-        universe=universe,
-        macro_gate=macro_gate,
-        circuit_breaker=cb_val
-    )
-    return JSONResponse(content=res)
+    u = _list(payload.get("universe"))
+    return JSONResponse(db.simulate_portfolio(_list(payload.get("strategies")), [x.upper() for x in u] if u else None,
+                                              _num(payload.get("cost")), _num(payload.get("monthly_stop"))))
+
 
 @app.api_route("/health", methods=["GET", "HEAD"])
-async def health_check():
-    """Healthcheck endpoint for Render / Uptime monitors."""
-    return {"status": "healthy", "service": "quant-momentum-showcase", "version": "1.0.0"}
+async def health():
+    meta = db.get_meta()
+    return {"status": "healthy" if meta else "no-data", "data_through": meta.get("cutoff"),
+            "generated_at": meta.get("generated_at")}
+
 
 if __name__ == "__main__":
     import uvicorn
-    port = int(os.environ.get("PORT", 8000))
-    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=False)
+    uvicorn.run("main:app", host="0.0.0.0", port=int(os.environ.get("PORT", 8000)), reload=False)

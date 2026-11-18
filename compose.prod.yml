@@ -1,0 +1,24 @@
+name: quantshowcase
+services:
+  quant:
+    build: .
+    image: quant-showcase:latest
+    restart: unless-stopped
+    environment:
+      TZ: Asia/Kolkata
+      PYTHONUNBUFFERED: "1"
+      PORT: "8000"
+      QS_DATA_DIR: /app/data/live
+    volumes:
+      # written each trading evening by exporter/run_export.sh (index-level model, 1-month delay)
+      - ./data/live:/app/data/live:ro
+    ports:
+      - "127.0.0.1:8200:8000"
+    networks: [default, wealthos]
+    deploy:
+      resources:
+        limits: {cpus: "1", memory: 512m}
+networks:
+  wealthos:
+    external: true
+    name: wealthos_default
